@@ -37,6 +37,8 @@ const app = {
         setTagsList (state, list) {
             state.tagsList.push(...list);
         },
+        // 更新左侧的菜单栏
+        // 原理是通过读取路由的配置文件
         updateMenulist (state) {
             let accessCode = parseInt(Cookies.get('access'));
             let menuList = [];

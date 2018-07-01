@@ -49,14 +49,15 @@ export const locking = {
     component: () => import('@/views/main-components/lockscreen/components/locking-page.vue')
 };
 
-// 作为Main组件的子页面展示但是不在左侧菜单显示的路由写在otherRouter里
+// 作为Main组件的子页面展示但是不在左侧菜单显示的路由写在otherRouter里 
+// 其中的配置参数name 其实 就是哈希了
 export const otherRouter = {
     path: '/',
     name: 'otherRouter',
     redirect: '/home',
     component: Main,
     children: [
-        { path: 'home', title: {i18n: 'home'}, name: 'home_index', component: () => import('@/views/home/home.vue') },
+        { path: 'home', title: { i18n: 'home' }, name: 'home_index', component: () => import('@/views/home/home.vue') },
         { path: 'ownspace', title: '个人中心', name: 'ownspace_index', component: () => import('@/views/own-space/own-space.vue') },
         { path: 'order/:order_id', title: '订单详情', name: 'order-info', component: () => import('@/views/advanced-router/component/order-info.vue') }, // 用于展示动态路由
         { path: 'shopping', title: '购物详情', name: 'shopping', component: () => import('@/views/advanced-router/component/shopping-info.vue') }, // 用于展示带参路由
@@ -90,11 +91,118 @@ export const appRouter = [
     {
         path: '/international',
         icon: 'earth',
-        title: {i18n: 'international'},
+        title: { i18n: 'international' },
         name: 'international',
         component: Main,
         children: [
-            { path: 'index', title: {i18n: 'international'}, name: 'international_index', component: () => import('@/views/international/international.vue') }
+            { path: 'index', title: { i18n: 'international' }, name: 'international_index', component: () => import('@/views/international/international.vue') }
+        ]
+    },
+
+    {
+        path: '/article',
+        icon: 'social-buffer',
+        name: 'article',
+        title: '文章管理',
+        component: Main,
+        children: [
+            {
+                path: 'text-editor',
+                icon: 'compose',
+                name: 'text-editor',
+                title: '发布文章',
+                component: () => import('@/views/my-components/text-editor/text-editor.vue')
+            },
+            {
+                path: 'md-editor',
+                icon: 'pound',
+                name: 'md-editor',
+                title: '所有文章',
+                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+            },
+            {
+                path: 'image-editor',
+                icon: 'crop',
+                name: 'image-editor',
+                title: '文章标签',
+                component: () => import('@/views/my-components/image-editor/image-editor.vue')
+            },
+            {
+                path: 'draggable-list',
+                icon: 'arrow-move',
+                name: 'draggable-list',
+                title: '文章分类',
+                component: () => import('@/views/my-components/draggable-list/draggable-list.vue')
+            }
+        ]
+    },
+    {
+        path: '/comment',
+        icon: 'social-buffer',
+        name: 'comment',
+        title: '评论管理',
+        component: Main,
+        children: [
+            {
+                path: 'text-editor',
+                icon: 'compose',
+                name: 'text-editor',
+                title: '所有评论',
+                component: () => import('@/views/my-components/text-editor/text-editor.vue')
+            },
+            {
+                path: 'md-editor',
+                icon: 'pound',
+                name: 'md-editor',
+                title: '留言评论',
+                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+            },
+        ]
+    },
+    {
+        path: '/advertisement',
+        icon: 'social-buffer',
+        name: 'advertisement',
+        title: '广告管理',
+        component: Main,
+        children: [
+            {
+                path: 'text-editor',
+                icon: 'compose',
+                name: 'text-editor',
+                title: '首页广告',
+                component: () => import('@/views/my-components/text-editor/text-editor.vue')
+            },
+            {
+                path: 'md-editor',
+                icon: 'pound',
+                name: 'md-editor',
+                title: '文章广告',
+                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+            },
+        ]
+    },
+    {
+        path: '/aliyun',
+        icon: 'social-buffer',
+        name: 'aliyun',
+        title: '阿里云管理',
+        component: Main,
+        children: [
+            {
+                path: 'text-editor',
+                icon: 'compose',
+                name: 'text-editor',
+                title: 'CDN',
+                component: () => import('@/views/my-components/text-editor/text-editor.vue')
+            },
+            {
+                path: 'md-editor',
+                icon: 'pound',
+                name: 'md-editor',
+                title: '视频点播',
+                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+            },
         ]
     },
     {
