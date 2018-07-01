@@ -111,7 +111,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'text-editor',
                 title: '发布文章',
-                component: () => import('@/views/my-components/text-editor/text-editor.vue')
+                component: () => import('@/views/form/article-publish/article-publish.vue')
             },
             {
                 path: 'md-editor',
