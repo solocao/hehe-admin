@@ -1,6 +1,6 @@
 <style lang="less">
-    @import '../../styles/common.less';
-    @import './components/table.less';
+@import "../../styles/common.less";
+@import "./components/table.less";
 </style>
 
 <template>
@@ -11,21 +11,9 @@
                     <Icon type="images"></Icon>
                     将表格数据连同样式一起以图片形式导出
                 </p>
-                <Row>
-                    <Col span="18">
-                        <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
-                    </Col>
-                    <Col span="6" class="padding-left-20">
-                        <div id="showImage" class="margin-bottom-10">
-                            <span>输入文件名：</span>
-                            <Input v-model="imageName" icon="document" placeholder="请输入图片名" style="width: 190px"/>
-                        </div>
-                        <Button type="primary" @click="exportImage">导出表格为图片</Button>
-                        <div id="showImage" class="show-image margin-top-20">
-                            <img id="exportedImage" />
-                        </div>
-                    </Col>
-                </Row>
+
+                <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
+
             </Card>
         </Row>
     </div>

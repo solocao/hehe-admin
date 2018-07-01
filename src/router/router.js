@@ -125,7 +125,7 @@ export const appRouter = [
                 icon: 'crop',
                 name: 'image-editor',
                 title: '文章标签',
-                component: () => import('@/views/my-components/image-editor/image-editor.vue')
+                component: () => import('@/views/article/tag.vue')
             },
             {
                 path: 'draggable-list',
