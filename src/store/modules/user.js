@@ -3,10 +3,10 @@ import { db } from '../../libs/db';
 
 const user = {
     state: {
-        user: db.get('login').value()
+        user: db.get('user').value()
     },
     mutations: {
-        logout (state, vm) {
+        logout(state, vm) {
             Cookies.remove('user');
             Cookies.remove('password');
             Cookies.remove('access');

@@ -33,7 +33,7 @@ export const post = (params) => {
     if (auth) {
         authHeader = {
             headers: {
-                authorization: store.state.user.auth
+                authorization: store.state.user.user.auth
             }
         };
     }

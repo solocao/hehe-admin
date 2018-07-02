@@ -79,7 +79,7 @@ export default {
                     if (result.code === 1) {
                         Cookies.set('user', this.form.userName);
                         Cookies.set('password', this.form.password);
-                        this.set({ login: true, user1: result.data })
+                        this.set({ login: true, user: result.data })
                         this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
                         if (this.form.userName === 'iview_admin') {
                             Cookies.set('access', 0);

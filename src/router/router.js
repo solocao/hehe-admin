@@ -107,11 +107,11 @@ export const appRouter = [
         component: Main,
         children: [
             {
-                path: 'text-editor',
+                path: 'add',
                 icon: 'compose',
                 name: 'text-editor',
                 title: '发布文章',
-                component: () => import('@/views/form/article-publish/article-publish.vue')
+                component: () => import('@/views/article/article-add.vue')
             },
             {
                 path: 'md-editor',
