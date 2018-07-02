@@ -8,9 +8,14 @@ import '@/locale';
 import 'iview/dist/styles/iview.css';
 import VueI18n from 'vue-i18n';
 import util from './libs/util';
+import { get, post } from './api/index.js';
 
 Vue.use(VueI18n);
 Vue.use(iView);
+
+// 全局请求数据
+Vue.prototype.get = get;
+Vue.prototype.post = post;
 
 new Vue({
     el: '#app',

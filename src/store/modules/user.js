@@ -1,7 +1,10 @@
 import Cookies from 'js-cookie';
+import { db } from '../../libs/db';
 
 const user = {
-    state: {},
+    state: {
+        user: db.get('login').value()
+    },
     mutations: {
         logout (state, vm) {
             Cookies.remove('user');

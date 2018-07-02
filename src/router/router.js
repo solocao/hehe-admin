@@ -118,7 +118,7 @@ export const appRouter = [
                 icon: 'pound',
                 name: 'md-editor',
                 title: '所有文章',
-                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+                component: () => import('@/views/article/list.vue')
             },
             {
                 path: 'image-editor',

@@ -1,5 +1,5 @@
 <style lang="less">
-    @import './login.less';
+@import "./login.less";
 </style>
 
 <template>
@@ -14,16 +14,16 @@
                     <Form ref="loginForm" :model="form" :rules="rules">
                         <FormItem prop="userName">
                             <Input v-model="form.userName" placeholder="请输入用户名">
-                                <span slot="prepend">
-                                    <Icon :size="16" type="person"></Icon>
-                                </span>
+                            <span slot="prepend">
+                                <Icon :size="16" type="person"></Icon>
+                            </span>
                             </Input>
                         </FormItem>
                         <FormItem prop="password">
                             <Input type="password" v-model="form.password" placeholder="请输入密码">
-                                <span slot="prepend">
-                                    <Icon :size="14" type="locked"></Icon>
-                                </span>
+                            <span slot="prepend">
+                                <Icon :size="14" type="locked"></Icon>
+                            </span>
                             </Input>
                         </FormItem>
                         <FormItem>
@@ -39,8 +39,9 @@
 
 <script>
 import Cookies from 'js-cookie';
+const crypto = require('crypto');
 export default {
-    data () {
+    data() {
         return {
             form: {
                 userName: 'iview_admin',
@@ -57,20 +58,34 @@ export default {
         };
     },
     methods: {
-        handleSubmit () {
-            this.$refs.loginForm.validate((valid) => {
+        async handleSubmit() {
+            this.$refs.loginForm.validate(async (valid) => {
                 if (valid) {
-                    Cookies.set('user', this.form.userName);
-                    Cookies.set('password', this.form.password);
-                    this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
-                    if (this.form.userName === 'iview_admin') {
-                        Cookies.set('access', 0);
-                    } else {
-                        Cookies.set('access', 1);
+                    const parms = {
+                        url: '/user/login',
+                        payload: {
+                            name: this.form.userName,
+                            password: crypto.createHash('md5').update(this.form.password).digest('hex')
+                        }
                     }
-                    this.$router.push({
-                        name: 'home_index'
-                    });
+                    const result = await this.post(parms)
+                    if (result.code === 1) {
+                        Cookies.set('user', this.form.userName);
+                        Cookies.set('password', this.form.password);
+                        this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
+                        if (this.form.userName === 'iview_admin') {
+                            Cookies.set('access', 0);
+                        } else {
+                            Cookies.set('access', 1);
+                        }
+                        this.$router.push({
+                            name: 'home_index'
+                        });
+                    } else {
+                        this.$Message.info(result.msg)
+                    }
+                    console.log(result)
+                    console.log(this.$store)
                 }
             });
         }
@@ -79,5 +94,4 @@ export default {
 </script>
 
 <style>
-
 </style>
