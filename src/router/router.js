@@ -121,9 +121,9 @@ export const appRouter = [
                 component: () => import('@/views/article/list.vue')
             },
             {
-                path: 'image-editor',
+                path: 'tag',
                 icon: 'crop',
-                name: 'image-editor',
+                name: 'tag',
                 title: '文章标签',
                 component: () => import('@/views/article/tag.vue')
             },

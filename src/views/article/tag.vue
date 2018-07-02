@@ -204,6 +204,11 @@ export default {
     };
   },
   methods: {
+
+    async taglist() {
+
+
+    },
     mockTableData1() {
       let data = [];
       for (let i = 0; i < 10; i++) {

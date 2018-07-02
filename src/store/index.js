@@ -12,7 +12,7 @@ const store = new Vuex.Store({
         //
     },
     mutations: {
-        set(state, params) {
+        set (state, params) {
             const keys = Object.keys(params);
             keys.forEach(x => {
                 const val = params[x];

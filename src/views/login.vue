@@ -40,12 +40,13 @@
 <script>
 import Cookies from 'js-cookie';
 const crypto = require('crypto');
+import { mapState, mapMutations } from 'vuex'
 export default {
     data() {
         return {
             form: {
-                userName: 'iview_admin',
-                password: ''
+                userName: 'root',
+                password: 'root'
             },
             rules: {
                 userName: [
@@ -58,6 +59,9 @@ export default {
         };
     },
     methods: {
+        ...mapMutations({
+            set: 'set'
+        }),
         async handleSubmit() {
             this.$refs.loginForm.validate(async (valid) => {
                 if (valid) {
@@ -69,9 +73,13 @@ export default {
                         }
                     }
                     const result = await this.post(parms)
+                    // console.log(result)
+                    // console.log(this.$store)
+                    // return ''
                     if (result.code === 1) {
                         Cookies.set('user', this.form.userName);
                         Cookies.set('password', this.form.password);
+                        this.set({ login: true, user1: result.data })
                         this.$store.commit('setAvator', 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg');
                         if (this.form.userName === 'iview_admin') {
                             Cookies.set('access', 0);
