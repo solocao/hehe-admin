@@ -114,9 +114,9 @@ export const appRouter = [
                 component: () => import('@/views/article/article-add.vue')
             },
             {
-                path: 'md-editor',
+                path: 'list',
                 icon: 'pound',
-                name: 'md-editor',
+                name: 'article-list',
                 title: '所有文章',
                 component: () => import('@/views/article/list.vue')
             },

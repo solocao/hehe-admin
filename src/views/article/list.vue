@@ -1,45 +1,57 @@
 <template>
-  <div>
-    <Card>
-      <p slot="title">
-        <Icon type="images"></Icon>
-        标签管理
-      </p>
+    <div style="background:white">
+        <div style="marginBottom:4px;marginTop:4px">
+            <ButtonGroup>
+                <Button size='small'>全部</Button>
+                <Button size='small' type="primary">已发布</Button>
+                <Button size='small'>全部</Button>
+                <Button size='small'>全部</Button>
+            </ButtonGroup>
+            <ButtonGroup>
+                <Button size='small'>刷新</Button>
+                <Button size='small' type="primary">清空搜索条件</Button>
+                <Button size='small'>全部</Button>
+                <Button size='small'>批量操作</Button>
+            </ButtonGroup>
+        </div>
 
-      <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
+        <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
 
-    </Card>
-  </div>
+    </div>
 </template>
 <script>
 export default {
-    data () {
+    data() {
         return {
             tableData1: this.mockTableData1(),
             imageName: '',
             tableColumns1: [
                 {
-                    title: '名称',
-                    key: 'name'
-                },
-                {
-                    title: '状态',
-                    key: 'status',
+                    title: '文章',
+                    key: 'title',
+                    width: 200,
                     render: (h, params) => {
                         const row = params.row;
-                        const color = row.status === 1 ? 'blue' : row.status === 2 ? 'green' : 'red';
-                        const text = row.status === 1 ? '构建中' : row.status === 2 ? '构建完成' : '构建失败';
-
-                        return h('Tag', {
-                            props: {
-                                type: 'dot',
-                                color: color
+                        console.log(row.title)
+                        const text = row.title
+                        return h('div', {
+                            style: {
+                                textAlign: 'center',
+                                padding: '4px',
+                                height: '120px',
+                                width: '200px',
+                                background: 'url(http://mongoosejs.com/docs/images/mongoose5_62x30_transparent.png)',
+                                backgroundSize: 'cover'
                             }
                         }, text);
                     }
                 },
                 {
-                    title: '画像内容',
+                    title: '分类目录',
+                    key: 'category'
+                },
+                {
+                    title: '标签',
                     key: 'portrayal',
                     render: (h, params) => {
                         return h('Poptip', {
@@ -49,68 +61,119 @@ export default {
                                 placement: 'bottom'
                             }
                         }, [
-                            h('Tag', params.row.portrayal.length),
-                            h('div', {
-                                slot: 'content'
-                            }, [
-                                h('ul', this.tableData1[params.index].portrayal.map(item => {
-                                    return h('li', {
-                                        style: {
-                                            textAlign: 'center',
-                                            padding: '4px'
-                                        }
-                                    }, item);
-                                }))
-                            ])
-                        ]);
+                                h('Tag', params.row.portrayal.length),
+                                h('div', {
+                                    slot: 'content'
+                                }, [
+                                        h('ul', this.tableData1[params.index].portrayal.map(item => {
+                                            return h('li', {
+                                                style: {
+                                                    textAlign: 'center',
+                                                    padding: '4px'
+                                                }
+                                            }, item);
+                                        }))
+                                    ])
+                            ]);
                     }
                 },
                 {
-                    title: '选定人群数',
-                    key: 'people',
+                    title: '标签',
+                    key: 'tag',
+
+                },
+                {
+                    title: '评论',
+                    key: 'comment',
+                },
+                {
+                    title: '喜欢',
+                    key: 'update'
+                },
+                {
+                    title: '日期',
+                    key: 'create_at'
+                },
+                {
+                    title: '状态',
+                    key: 'state'
+                },
+                {
+                    title: '操作',
+                    key: 'state',
                     render: (h, params) => {
-                        return h('Poptip', {
-                            props: {
-                                trigger: 'hover',
-                                title: params.row.people.length + '个客群',
-                                placement: 'bottom'
+                        return h('div', {
+                            style: {
+                                display: 'flex',
+                                flexDirection: 'column'
                             }
-                        }, [
-                            h('Tag', params.row.people.length),
-                            h('div', {
-                                slot: 'content'
-                            }, [
-                                h('ul', this.tableData1[params.index].people.map(item => {
-                                    return h('li', {
-                                        style: {
-                                            textAlign: 'center',
-                                            padding: '4px'
+                        },
+                            [
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '1px'
+
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index)
                                         }
-                                    }, item.n + '：' + item.c + '人');
-                                }))
-                            ])
-                        ]);
-                    }
-                },
-                {
-                    title: '取样时段',
-                    key: 'time',
-                    render: (h, params) => {
-                        return h('div', '近' + params.row.time + '天');
-                    }
-                },
-                {
-                    title: '更新时间',
-                    key: 'update',
-                    render: (h, params) => {
-                        return h('div', this.formatDate(this.tableData1[params.index].update));
+                                    }
+                                }, '编辑文章'),
+                                h('Button', {
+                                    props: {
+                                        type: 'primary',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '1px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.show(params.index)
+                                        }
+                                    }
+                                }, '移到草稿'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '1px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.index)
+                                        }
+                                    }
+                                }, '移回收站'),
+                                h('Button', {
+                                    props: {
+                                        type: 'error',
+                                        size: 'small'
+                                    },
+                                    style: {
+                                        margin: '1px'
+                                    },
+                                    on: {
+                                        click: () => {
+                                            this.remove(params.index)
+                                        }
+                                    }
+                                }, '查看文章')
+                            ]);
                     }
                 }
             ]
         };
     },
     methods: {
-        mockTableData1 () {
+        mockTableData1() {
             let data = [];
             for (let i = 0; i < 10; i++) {
                 data.push({
@@ -137,15 +200,30 @@ export default {
             }
             return data;
         },
-        formatDate (date) {
+        formatDate(date) {
             const y = date.getFullYear();
             let m = date.getMonth() + 1;
             m = m < 10 ? '0' + m : m;
             let d = date.getDate();
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
+        },
+        async articleList() {
+            const params = {
+                url: 'article/list',
+                payload: {}
+            }
+            const result = await this.post(params)
+            console.log('看看结果')
+            console.log(result)
+            console.log(result.data)
+            this.tableData1 = result.data
+
         }
 
+    },
+    mounted() {
+        this.articleList()
     }
 };
 </script>
