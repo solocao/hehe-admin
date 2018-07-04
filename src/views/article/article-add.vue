@@ -167,6 +167,28 @@ export default {
         };
     },
     methods: {
+        async categoryList() {
+            const params = {
+                url: 'category/list',
+                payload: {}
+            }
+            const result = await this.post(params)
+            const data = result.data
+            function nodeTree(tree) {
+                tree.forEach(e => {
+                    e.title = e.name
+                    e.expand = true
+                    if (e.children === undefined) {
+                        return
+                    } else {
+                        nodeTree(e.children)
+                    }
+                });
+            }
+            nodeTree(data)
+            this.classificationList = data
+        },
+
         titleBlur() {
             if (this.title.length !== 0) {
                 // this.articleError = '';
@@ -340,6 +362,7 @@ export default {
         }
     },
     mounted() {
+        this.categoryList()
         this.articleTagList = [
             { value: 'vue' },
             { value: 'iview' },
