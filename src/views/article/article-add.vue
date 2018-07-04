@@ -15,11 +15,8 @@
                         <Input v-model="description" @on-blur="descriptionBlur" icon="android-list" />
                     </FormItem>
                     <FormItem label="文章标签" :error="articleError">
-                        <Tag type="dot" color="blue">标签一</Tag>
-                        <Tag type="dot" color="blue">标签一</Tag>
-                        <Tag type="dot" color="blue">标签一</Tag>
+                        <Tag type="dot" color="blue" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
                     </FormItem>
-
                 </Form>
                 <div class="margin-top-20">
                     <textarea id="articleEditor"></textarea>
@@ -134,6 +131,7 @@ export default {
             },
             // 标题
             title: '',
+            tags:null,
             // 关键字
             keyword: '',
             // 描述
@@ -187,6 +185,17 @@ export default {
             }
             nodeTree(data)
             this.classificationList = data
+        },
+        async tagList() {
+            const params = {
+                url: '/tag/list',
+                payload: {
+
+                }
+            }
+            const result = await this.post(params)
+            this.tags = result.data
+
         },
 
         titleBlur() {
@@ -363,6 +372,7 @@ export default {
     },
     mounted() {
         this.categoryList()
+        this.tagList()
         this.articleTagList = [
             { value: 'vue' },
             { value: 'iview' },
