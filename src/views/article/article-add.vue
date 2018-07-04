@@ -1,7 +1,3 @@
-<style lang="stylus">
-@import '../../styles/common.styl';
-@import './article-add.styl';
-</style>
 
 <template>
     <div>
@@ -459,3 +455,8 @@ export default {
     }
 };
 </script>
+<style lang="stylus">
+
+@import '../../styles/common.styl';
+@import './article-add.styl';
+</style>

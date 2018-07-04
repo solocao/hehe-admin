@@ -40,7 +40,7 @@ export const page500 = {
 export const preview = {
     path: '/preview',
     name: 'preview',
-    component: () => import('@/views/form/article-publish/preview.vue')
+    component: () => import('@/views/article/article-preview.vue')
 };
 
 export const locking = {
@@ -132,7 +132,7 @@ export const appRouter = [
                 icon: 'arrow-move',
                 name: 'draggable-list',
                 title: '文章分类',
-                component: () => import('@/views/my-components/draggable-list/draggable-list.vue')
+                component: () => import('@/views/article/category.vue')
             }
         ]
     },

@@ -162,7 +162,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.remove(params.index)
+                                            this.openPreview(params.row._id)
                                         }
                                     }
                                 }, '查看文章')
@@ -207,6 +207,15 @@ export default {
             let d = date.getDate();
             d = d < 10 ? ('0' + d) : d;
             return y + '-' + m + '-' + d;
+        },
+        // 打开文章预览
+        openPreview(id) {
+            this.$router.push({
+                name: 'preview',
+                params: {
+                    id: id,
+                }
+            })
         },
         async articleList() {
             const params = {
