@@ -6,16 +6,16 @@
             <Card>
                 <Form :label-width="80">
                     <FormItem label="文章标题" :error="articleError">
-                        <Input v-model="title" @on-blur="titleBlur" icon="android-list" />
+                        <Input v-model="title" @on-blur="titleBlur" />
                     </FormItem>
                     <FormItem label="关键字" :error="keyworError">
-                        <Input v-model="keyword" @on-blur="keywordBlur" icon="android-list" />
+                        <Input v-model="keyword" @on-blur="keywordBlur" />
                     </FormItem>
                     <FormItem label="文章描述" :error="descriptionError">
-                        <Input v-model="description" @on-blur="descriptionBlur" icon="android-list" />
+                        <Input v-model="description" @on-blur="descriptionBlur" />
                     </FormItem>
                     <FormItem label="文章标签" :error="articleError">
-                        <Tag type="dot" color="blue" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
+                        <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
                     </FormItem>
                 </Form>
                 <div class="margin-top-20">
@@ -97,7 +97,7 @@
                     <Tabs type="card">
                         <TabPane label="所有分类目录">
                             <div class="classification-con">
-                                <Tree :data="classificationList" @on-check-change="setClassificationInAll" show-checkbox></Tree>
+                                <Tree ref="categoryTree" :data="classificationList" @on-check-change="setClassificationInAll" show-checkbox></Tree>
                             </div>
                         </TabPane>
                         <TabPane label="常用目录">
@@ -131,7 +131,9 @@ export default {
             },
             // 标题
             title: '',
-            tags:null,
+            tags: null,
+            avtiveTags:null,
+            activeCatogories:null,
             // 关键字
             keyword: '',
             // 描述
@@ -165,6 +167,9 @@ export default {
         };
     },
     methods: {
+        avtiveTag(t) {
+            t.active = !t.active
+        },
         async categoryList() {
             const params = {
                 url: 'category/list',
@@ -194,6 +199,11 @@ export default {
                 }
             }
             const result = await this.post(params)
+            const data = result.data
+            data.forEach(x => {
+                x.active = false
+            })
+
             this.tags = result.data
 
         },
@@ -294,6 +304,16 @@ export default {
         },
         // 允许发布之前的权限验证
         canPublish() {
+            this.avtiveTags = this.tags.filter(x => x.active === true)
+            if (this.avtiveTags.length === 0) {
+                this.$Message.error('请选择文章标签');
+                return false
+            }
+            this.activeCatogories = this.$refs.categoryTree.getCheckedNodes()
+            if (this.activeCatogories.length === 0) {
+                this.$Message.error('请选择文章分类');
+                return false
+            }
             if (this.title.length === 0) {
                 this.$Message.error('请输入文章标题');
                 return false;
@@ -327,18 +347,19 @@ export default {
             }
         },
         async handlePublish() {
-            // alert('发布了');
-            // console.log(tinymce.activeEditor.getContent());
-            // return '';
             if (this.canPublish()) {
                 this.publishLoading = true;
+                console.log('看看结果')
+                console.log(this.avtiveTags.map(x=>{return x._id}))
                 const params = {
                     url: '/article/add',
                     payload: {
                         title: this.title,
                         content: this.content,
                         keyword: this.keyword,
-                        description: this.description
+                        description: this.description,
+                        tag:JSON.stringify(this.avtiveTags.map(x=>{return x._id})),
+                        category:JSON.stringify(this.activeCatogories.map(x=>{return x._id}))
                     },
                     auth: true
                 }
