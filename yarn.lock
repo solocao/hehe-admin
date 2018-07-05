@@ -6518,6 +6518,12 @@ vue-i18n@^5.0.3:
   version "5.0.3"
   resolved "http://registry.npm.taobao.org/vue-i18n/download/vue-i18n-5.0.3.tgz#b6d96cc832604237e6139de471e0d4c820aedbed"
 
+vue-image-crop-upload@^2.3.2:
+  version "2.3.2"
+  resolved "http://registry.npm.taobao.org/vue-image-crop-upload/download/vue-image-crop-upload-2.3.2.tgz#e2b003837ef5077ef476b8b7fe3e253246890fe7"
+  dependencies:
+    babel-runtime "^6.11.6"
+
 vue-loader@^13.7.0:
   version "13.7.2"
   resolved "http://registry.npm.taobao.org/vue-loader/download/vue-loader-13.7.2.tgz#f633f6393e905ffd730400f03c99353618c08fe8"

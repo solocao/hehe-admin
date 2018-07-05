@@ -80,7 +80,7 @@ export default {
     };
   },
   methods: {
-    async taglist() {
+    async tagList() {
       const params = {
         url: '/tag/list',
         payload: {
@@ -106,7 +106,7 @@ export default {
       const result = await this.post(params)
       if (result.code === 1) {
         this.$Message.info(result.msg)
-        this.taglist()
+        this.tagList()
       } else {
         this.$Message.console.warn(result.msg);
         (result.msg)
@@ -150,7 +150,7 @@ export default {
 
   },
   mounted() {
-    this.taglist()
+    this.tagList()
   }
 };
 </script>

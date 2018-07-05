@@ -37,6 +37,7 @@
     "stylus-loader": "^3.0.2",
     "tinymce": "^4.7.4",
     "vue": "^2.5.13",
+    "vue-image-crop-upload": "^2.3.2",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.1",
     "vue-virtual-scroller": "^0.10.6",

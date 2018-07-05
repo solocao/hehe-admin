@@ -39,3 +39,12 @@ export const post = (params) => {
     }
     return axios.post(url, qs.stringify(payload), authHeader).then(x => x.data);
 };
+
+export const upload = (params) => {
+    const { url, payload } = params;
+    return axios.post(url, payload, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    }).then(x => x.data);
+};

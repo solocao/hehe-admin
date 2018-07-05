@@ -98,7 +98,6 @@ export const appRouter = [
             { path: 'index', title: { i18n: 'international' }, name: 'international_index', component: () => import('@/views/international/international.vue') }
         ]
     },
-
     {
         path: '/article',
         icon: 'social-buffer',
@@ -136,6 +135,7 @@ export const appRouter = [
             }
         ]
     },
+
     {
         path: '/comment',
         icon: 'social-buffer',
@@ -155,6 +155,29 @@ export const appRouter = [
                 icon: 'pound',
                 name: 'md-editor',
                 title: '留言评论',
+                component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
+            },
+        ]
+    },
+    {
+        path: '/slider',
+        icon: 'social-buffer',
+        name: 'slider',
+        title: '轮播管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'compose',
+                name: 'slider-list',
+                title: '轮播素材',
+                component: () => import('@/views/slider/list.vue')
+            },
+            {
+                path: 'md-editor',
+                icon: 'pound',
+                name: 'md-editor',
+                title: '轮播组合',
                 component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
             },
         ]
