@@ -135,7 +135,6 @@ export const appRouter = [
             }
         ]
     },
-
     {
         path: '/comment',
         icon: 'social-buffer',
@@ -157,6 +156,44 @@ export const appRouter = [
                 title: '留言评论',
                 component: () => import('@/views/my-components/markdown-editor/markdown-editor.vue')
             },
+        ]
+    },
+
+    {
+        path: '/product',
+        icon: 'social-buffer',
+        name: 'product',
+        title: '商品管理',
+        component: Main,
+        children: [
+            {
+                path: 'list',
+                icon: 'compose',
+                name: 'product-list',
+                title: '商品列表',
+                component: () => import('@/views/product/list.vue')
+            },
+            {
+                path: 'add',
+                icon: 'pound',
+                name: 'product-add',
+                title: '添加商品',
+                component: () => import('@/views/product/add.vue')
+            },
+            {
+                path: 'tag',
+                icon: 'compose',
+                name: 'product-tag',
+                title: '商品标签',
+                component: () => import('@/views/product/list.vue')
+            },
+            {
+                path: 'add',
+                icon: 'pound',
+                name: 'product-category',
+                title: '商品分类',
+                component: () => import('@/views/product/add.vue')
+            }
         ]
     },
     {

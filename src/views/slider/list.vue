@@ -47,7 +47,6 @@
           </span>
         </Row>
       </Card>
-
       </Col>
     </Row>
     <my-upload field="img" @crop-success="cropSuccess" @crop-upload-success="cropUploadSuccess" @crop-upload-fail="cropUploadFail" v-model="imgUploadShow" :width="300" :height="300" :params="params" :headers="headers" img-format="png"></my-upload>
