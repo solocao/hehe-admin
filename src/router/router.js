@@ -184,15 +184,15 @@ export const appRouter = [
                 path: 'tag',
                 icon: 'compose',
                 name: 'product-tag',
-                title: '商品标签',
+                title: '标签管理',
                 component: () => import('@/views/product/list.vue')
             },
             {
                 path: 'add',
                 icon: 'pound',
                 name: 'product-category',
-                title: '商品分类',
-                component: () => import('@/views/product/add.vue')
+                title: '品牌管理',
+                component: () => import('@/views/product/brand.vue')
             }
         ]
     },

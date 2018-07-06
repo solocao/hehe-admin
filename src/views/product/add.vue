@@ -4,23 +4,26 @@
     <Row>
       <Col span="18">
       <Card>
-        <Form :label-width="80">
-          <FormItem label="商品名称" :error="articleError">
-            <Input v-model="title" @on-blur="titleBlur" />
+        <Form ref="form" :model="form" :label-width="80" :rules="ruleValidate">
+          <FormItem prop="title" required="true" label="商品名称">
+            <Input v-model="form.title" />
           </FormItem>
-           <FormItem label="商品编码" :error="articleError">
-            <Input v-model="title" @on-blur="titleBlur" />
+          <FormItem label="商品编码" :error="articleError">
+            <Input v-model="title"/>
           </FormItem>
-          <FormItem label="商品关键字" :error="keyworError">
-            <Input v-model="keyword" @on-blur="keywordBlur" />
+          <FormItem label="商品关键字">
+            <Input v-model="keyword" />
           </FormItem>
-          <FormItem label="商品描述" :error="descriptionError">
-            <Input v-model="description" @on-blur="descriptionBlur" />
+          <FormItem label="商品描述">
+            <Input v-model="description"/>
           </FormItem>
-          <FormItem label="商品标签" :error="articleError">
+          <FormItem required="true" label="商品标签" >
             <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
           </FormItem>
-          <FormItem label="商品图片" :error="articleError">
+          <FormItem required="true" label="品牌" >
+            <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
+          </FormItem>
+          <FormItem label="商品图片">
             <image-upload></image-upload>
           </FormItem>
         </Form>
@@ -100,17 +103,17 @@
             <Icon type="navicon-round"></Icon>
             商品报价
           </p>
-        <Form :label-width="80">
-          <FormItem label="市场价" :error="articleError">
-            <Input v-model="title" @on-blur="titleBlur" />
-          </FormItem>
-          <FormItem label="本店售价" :error="articleError">
-            <Input v-model="title" @on-blur="titleBlur" />
-          </FormItem>
-         <FormItem label="库存数量" :error="articleError">
-            <Input v-model="title" @on-blur="titleBlur" />
-          </FormItem>
-        </Form>
+          <Form :label-width="80">
+            <FormItem label="市场价" :error="articleError">
+              <Input v-model="title" @on-blur="titleBlur" />
+            </FormItem>
+            <FormItem label="本店售价" :error="articleError">
+              <Input v-model="title" @on-blur="titleBlur" />
+            </FormItem>
+            <FormItem label="库存数量" :error="articleError">
+              <Input v-model="title" @on-blur="titleBlur" />
+            </FormItem>
+          </Form>
         </Card>
       </div>
 
@@ -125,7 +128,7 @@ import imageUpload from '../utils/imageUpload.vue'
 
 export default {
   name: 'product-add',
-  components:{
+  components: {
     imageUpload
   },
   data() {
@@ -133,6 +136,9 @@ export default {
       content: '<h2>I am Example</h2>',
       editorOption: {
         // some quill options
+      },
+      form: {
+        title: null
       },
       // 标题
       title: '',
@@ -168,7 +174,18 @@ export default {
       classificationFinalSelected: [], // 最后实际选择的目录
       publishLoading: false,
       addingNewTag: false, // 添加新标签
-      newTagName: '' // 新建标签名
+      newTagName: '', // 新建标签名
+      ruleValidate: {
+        title: [
+          { required: true, message: '商品名称不能为空', trigger: 'blur' }
+        ],
+        mail: [
+          { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
+          { type: 'email', message: 'Incorrect email format', trigger: 'blur' }
+        ],
+        city: [
+          { required: true, message: 'Please select the city', trigger: 'change' }
+        ]      }
     };
   },
   methods: {
