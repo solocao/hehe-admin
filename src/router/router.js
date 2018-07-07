@@ -185,7 +185,7 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'product-tag',
                 title: '标签管理',
-                component: () => import('@/views/product/list.vue')
+                component: () => import('@/views/product/tag.vue')
             },
             {
                 path: 'add',

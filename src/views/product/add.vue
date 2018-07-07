@@ -9,19 +9,19 @@
             <Input v-model="form.title" />
           </FormItem>
           <FormItem label="商品编码" :error="articleError">
-            <Input v-model="title"/>
+            <Input v-model="title" />
           </FormItem>
           <FormItem label="商品关键字">
             <Input v-model="keyword" />
           </FormItem>
           <FormItem label="商品描述">
-            <Input v-model="description"/>
+            <Input v-model="description" />
           </FormItem>
-          <FormItem required="true" label="商品标签" >
+          <FormItem required="true" label="商品标签">
             <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
           </FormItem>
-          <FormItem required="true" label="品牌" >
-            <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
+          <FormItem required="true" label="品牌">
+            <Cascader :data="brandData" v-model="brandValue" style="width:300px"></Cascader>
           </FormItem>
           <FormItem label="商品图片">
             <image-upload></image-upload>
@@ -116,7 +116,6 @@
           </Form>
         </Card>
       </div>
-
       </Col>
     </Row>
   </div>
@@ -134,6 +133,9 @@ export default {
   data() {
     return {
       content: '<h2>I am Example</h2>',
+      brandData: null,
+      brandValue: ["5b3f3f193938383b7b8a9ce9"],
+
       editorOption: {
         // some quill options
       },
@@ -192,17 +194,17 @@ export default {
     avtiveTag(t) {
       t.active = !t.active
     },
-    async categoryList() {
+    async brandList() {
       const params = {
-        url: 'category/list',
+        url: 'brand/list',
         payload: {}
       }
       const result = await this.post(params)
       const data = result.data
       function nodeTree(tree) {
         tree.forEach(e => {
-          e.title = e.name
-          e.expand = true
+          e.value = e._id
+          e.label = e.name
           if (e.children === undefined) {
             return
           } else {
@@ -211,13 +213,14 @@ export default {
         });
       }
       nodeTree(data)
-      this.classificationList = data
+      this.brandData =data
     },
+    // 获取商品tag
     async tagList() {
       const params = {
         url: '/tag/list',
         payload: {
-
+          type:1
         }
       }
       const result = await this.post(params)
@@ -225,47 +228,7 @@ export default {
       data.forEach(x => {
         x.active = false
       })
-
       this.tags = result.data
-
-    },
-
-    titleBlur() {
-      if (this.title.length !== 0) {
-        // this.articleError = '';
-        localStorage.title = this.title; // 本地存储文章标题
-        if (!this.articlePathHasEdited) {
-          let date = new Date();
-          let year = date.getFullYear();
-          let month = date.getMonth() + 1;
-          let day = date.getDate();
-          this.fixedLink = window.location.host + '/' + year + '/' + month + '/' + day + '/';
-          this.articlePath = this.title;
-          this.articlePathHasEdited = true;
-          this.showLink = true;
-        }
-      } else {
-        // this.articleError = '文章标题不可为空哦';
-        this.$Message.error('文章标题不可为空哦');
-      }
-    },
-    keywordBlur() {
-      if (this.keyword.length !== 0) {
-        // 本地存储文章关键字
-        localStorage.keyword = this.keyword;
-      } else {
-        // this.articleError = '文章标题不可为空哦';
-        this.$Message.error('关键字不可为空哦');
-      }
-    },
-    descriptionBlur() {
-      if (this.description.length !== 0) {
-        // 本地存储文章描述
-        localStorage.description = this.description;
-      } else {
-        // this.articleError = '文章标题不可为空哦';
-        this.$Message.error('文章描述不可为空哦');
-      }
     },
     editArticlePath() {
       this.editLink = !this.editLink;
@@ -414,7 +377,7 @@ export default {
     }
   },
   mounted() {
-    this.categoryList()
+    this.brandList()
     this.tagList()
     this.articleTagList = [
       { value: 'vue' },
