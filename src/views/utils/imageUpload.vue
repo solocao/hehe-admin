@@ -4,21 +4,34 @@
             <template v-if="item.status === 'finished'">
                 <img :src="item.url">
                 <div class="demo-upload-list-cover">
-                    <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
-                    <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                    <div class="cooperate">
+                        <span>
+                            <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
+                            预览
+                        </span>
+                        <span @click.native="handleRemove(item)">
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                            删除
+                        </span>
+                        <span>
+                            <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
+                            链接
+                        </span>
+                    </div>
+
                 </div>
             </template>
             <template v-else>
                 <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
             </template>
         </div>
-        <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" action="//jsonplaceholder.typicode.com/posts/" style="display: inline-block;width:58px;">
+        <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" action="http://localhost:3001/store/file" style="display: inline-block;width:58px;">
             <div style="width: 58px;height:58px;line-height: 58px;">
                 <Icon type="camera" size="20"></Icon>
             </div>
         </Upload>
         <Modal title="View Image" v-model="visible">
-            <img :src="'https://o5wwk8baw.qnssl.com/' + imgName + '/large'" v-if="visible" style="width: 100%">
+            <img :src="imgUrl" v-if="visible" style="width: 100%">
         </Modal>
     </div>
 
@@ -29,22 +42,18 @@ export default {
         return {
             defaultList: [
                 {
-                    'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                    'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                },
-                {
                     'name': 'bc7521e033abdd1e92222d733590f104',
                     'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
                 }
             ],
-            imgName: '',
+            imgUrl: '',
             visible: false,
             uploadList: []
         };
     },
     methods: {
-        handleView (name) {
-            this.imgName = name;
+        handleView (item) {
+            this.imgUrl = item.url;
             this.visible = true;
         },
         handleRemove (file) {
@@ -52,7 +61,7 @@ export default {
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
         },
         handleSuccess (res, file) {
-            file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+            file.url = res.url;
             file.name = '7eb99afb9d5f317c912f08b5212fd69a';
         },
         handleFormatError (file) {
@@ -85,8 +94,8 @@ export default {
 <style>
 .demo-upload-list {
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 160px;
+  height: 100px;
   text-align: center;
   line-height: 60px;
   border: 1px solid transparent;
@@ -118,5 +127,18 @@ export default {
   font-size: 20px;
   cursor: pointer;
   margin: 0 2px;
+}
+
+.demo-upload-list-cover span {
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+  margin: 0 2px;
+  margin-top: -2px;
+}
+
+.cooperate {
+  position: absolute;
+  bottom: 3px;
 }
 </style>
