@@ -22,23 +22,23 @@
                 </div>
             </template>
             <template v-else>
-                <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
+                <Progress v-if=" item.showProgress " :percent="item.percentage " hide-info></Progress>
             </template>
         </div>
-        <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" action="http://localhost:3001/store/file" style="display: inline-block;width:58px;">
-            <div style="width: 58px;height:58px;line-height: 58px;">
-                <Icon type="camera" size="20"></Icon>
+        <Upload ref="upload " :show-upload-list="false " :default-file-list="defaultList " :on-success="handleSuccess " :format="[ 'jpg', 'jpeg', 'png'] " :max-size="2048 " :on-format-error="handleFormatError " :on-exceeded-size="handleMaxSize " :before-upload="handleBeforeUpload " multiple type="drag " action="http://localhost:3001/store/file " style="display: inline-block;width:58px; ">
+            <div style="width: 58px;height:58px;line-height: 58px; ">
+                <Icon type="camera " size="20 "></Icon>
             </div>
         </Upload>
-        <Modal title="View Image" v-model="visible">
-            <img :src="imgUrl" v-if="visible" style="width: 100%">
+        <Modal title="View Image " v-model="visible ">
+            <img :src="imgUrl " v-if="visible " style="width: 100% ">
         </Modal>
     </div>
 
 </template>
 <script>
 export default {
-    data() {
+    data () {
         return {
             defaultList: [
                 {
@@ -52,40 +52,40 @@ export default {
         };
     },
     methods: {
-        handleView(item) {
+        handleView (item) {
             this.imgUrl = item.url;
             this.visible = true;
         },
-        handleRemove(file) {
+        handleRemove (file) {
             const fileList = this.$refs.upload.fileList;
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
         },
         // 复制链接
-        handleCopy(item) {
-            const self = this;
+        handleCopy (item) {
+            alert(item.url);
             this.$copyText(item.url).then(function (e) {
-                self.$Message.info('已复制到粘贴板');
+                this.$Message.info('已复制到粘贴板');
             }, function (e) {
-                self.$Message.info('复制出错');
+                this.$Message.info('复制出错');
             });
         },
-        handleSuccess(res, file) {
+        handleSuccess (res, file) {
             file.url = res.url;
             file.name = '7eb99afb9d5f317c912f08b5212fd69a';
         },
-        handleFormatError(file) {
+        handleFormatError (file) {
             this.$Notice.warning({
                 title: 'The file format is incorrect',
                 desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
             });
         },
-        handleMaxSize(file) {
+        handleMaxSize (file) {
             this.$Notice.warning({
                 title: 'Exceeding file size limit',
                 desc: 'File  ' + file.name + ' is too large, no more than 2M.'
             });
         },
-        handleBeforeUpload() {
+        handleBeforeUpload () {
             const check = this.uploadList.length < 5;
             if (!check) {
                 this.$Notice.warning({
@@ -95,7 +95,7 @@ export default {
             return check;
         }
     },
-    mounted() {
+    mounted () {
         this.uploadList = this.$refs.upload.fileList;
     }
 };
@@ -120,7 +120,7 @@ export default {
   height: 100%;
 }
 .demo-upload-list-cover {
-  display: none;
+  display: block;
   position: absolute;
   top: 0;
   bottom: 0;

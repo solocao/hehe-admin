@@ -40,8 +40,8 @@
         </p>
         <p class="margin-top-10">
           <Icon type="android-time"></Icon>&nbsp;&nbsp;状&nbsp;&nbsp;&nbsp; 态：
-          <Select size="small" style="width:90px" value="草稿">
-            <Option v-for="item in articleStateList" :value="item.value" :key="item.value">{{ item.value }}</Option>
+          <Select size="small" style="width:90px" v-model="form.state">
+            <Option v-for="item in articleStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </p>
         <p class="margin-top-10">
@@ -182,8 +182,8 @@ export default {
         // 关键字
         keyword: [],
         // 文章状态
-        state: 0,
-        // 公开状态
+        state: 1,
+        // 公开状态 -1私密，0需要密码，1公开
         public: 1,
         count: 12
       },
@@ -202,7 +202,7 @@ export default {
       editLink: false,
       editPathButtonType: 'ghost',
       editPathButtonText: '编辑',
-      articleStateList: [{ value: '草稿' }, { value: '等待复审' }],
+      articleStateList: [{ value: 0, label: '草稿' }, { value: 1, label: '正式' }],
       editOpenness: false,
       Openness: '公开',
       currentOpenness: '公开',
