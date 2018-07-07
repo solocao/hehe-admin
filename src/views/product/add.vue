@@ -5,22 +5,22 @@
       <Col span="18">
       <Card>
         <Form ref="form" :model="form" :label-width="80" :rules="ruleValidate">
-          <FormItem prop="title" required="true" label="商品名称">
-            <Input v-model="form.title" />
+          <FormItem prop="name" required="true" label="商品名称">
+            <Input v-model="form.name" />
           </FormItem>
           <FormItem label="商品编码" :error="articleError">
-            <Input v-model="title" />
+            <Input v-model="form.code" />
           </FormItem>
           <FormItem label="商品关键字">
-            <Input v-model="keyword" />
+            <Input v-model="form.keyword" />
           </FormItem>
           <FormItem label="商品描述">
-            <Input v-model="description" />
+            <Input v-model="form.description" />
           </FormItem>
-          <FormItem required="true" label="商品标签">
-            <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
+          <FormItem label="商品标签">
+            <Tag @click.native="activeTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
           </FormItem>
-          <FormItem required="true" label="品牌">
+          <FormItem label="品牌">
             <Cascader :data="brandData" v-model="brandValue" style="width:300px"></Cascader>
           </FormItem>
           <FormItem label="商品图片">
@@ -104,14 +104,14 @@
             商品报价
           </p>
           <Form :label-width="80">
-            <FormItem label="市场价" :error="articleError">
-              <Input v-model="title" @on-blur="titleBlur" />
+            <FormItem label="市场价">
+              <Input v-model="form.official_price" />
             </FormItem>
-            <FormItem label="本店售价" :error="articleError">
-              <Input v-model="title" @on-blur="titleBlur" />
+            <FormItem label="本店售价">
+              <Input v-model="form.sale_price" />
             </FormItem>
-            <FormItem label="库存数量" :error="articleError">
-              <Input v-model="title" @on-blur="titleBlur" />
+            <FormItem label="库存数量">
+              <Input v-model="form.count" />
             </FormItem>
           </Form>
         </Card>
@@ -135,15 +135,37 @@ export default {
       content: '<h2>I am Example</h2>',
       brandData: null,
       brandValue: ["5b3f3f193938383b7b8a9ce9"],
-
       editorOption: {
         // some quill options
       },
+      // 商品表单
       form: {
-        title: null
+        // 商品名称
+        name: '测试商品',
+        // 商品内容
+        content: 'afsafaee',
+        // 商品别名
+        slug: null,
+        // 商品描述
+        description: null,
+        // 官方售价
+        official_price: 1300,
+        // 实际售价
+        sale_price: 100,
+        // 图片列表
+        img_list: null,
+        // 标签
+        tag: [],
+        // 品牌
+        brand: [],
+        // 关键字
+        keyword: [],
+        // 文章状态
+        state: 0,
+        // 公开状态
+        public: 1,
+        count: 12
       },
-      // 标题
-      title: '',
       tags: null,
       avtiveTags: null,
       activeCatogories: null,
@@ -168,7 +190,6 @@ export default {
       publishTimeType: 'immediately',
       editPublishTime: false, // 是否正在编辑发布时间
       articleTagSelected: [], // 文章选中的标签
-      articleTagList: [], // 所有标签列表
       classificationList: [],
       classificationSelected: [], // 在所有分类目录中选中的目录数组
       offenUsedClass: [],
@@ -178,12 +199,8 @@ export default {
       addingNewTag: false, // 添加新标签
       newTagName: '', // 新建标签名
       ruleValidate: {
-        title: [
+        name: [
           { required: true, message: '商品名称不能为空', trigger: 'blur' }
-        ],
-        mail: [
-          { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
-          { type: 'email', message: 'Incorrect email format', trigger: 'blur' }
         ],
         city: [
           { required: true, message: 'Please select the city', trigger: 'change' }
@@ -191,8 +208,10 @@ export default {
     };
   },
   methods: {
-    avtiveTag(t) {
+    activeTag(t) {
       t.active = !t.active
+      // 给form tag 附值
+      this.form.tag = this.tags.filter(x => x.active === true)
     },
     async brandList() {
       const params = {
@@ -213,14 +232,14 @@ export default {
         });
       }
       nodeTree(data)
-      this.brandData =data
+      this.brandData = data
     },
     // 获取商品tag
     async tagList() {
       const params = {
         url: '/tag/list',
         payload: {
-          type:1
+          type: 1
         }
       }
       const result = await this.post(params)
@@ -273,15 +292,7 @@ export default {
       this.addingNewTag = !this.addingNewTag;
     },
     createNewTag() {
-      if (this.newTagName.length !== 0) {
-        this.articleTagList.push({ value: this.newTagName });
-        this.addingNewTag = false;
-        setTimeout(() => {
-          this.newTagName = '';
-        }, 200);
-      } else {
-        this.$Message.error('请输入标签名');
-      }
+
     },
     cancelCreateNewTag() {
       this.newTagName = '';
@@ -289,22 +300,9 @@ export default {
     },
     // 允许发布之前的权限验证
     canPublish() {
-      this.avtiveTags = this.tags.filter(x => x.active === true)
-      if (this.avtiveTags.length === 0) {
-        this.$Message.error('请选择文章标签');
-        return false
-      }
-      this.activeCatogories = this.$refs.categoryTree.getCheckedNodes()
-      if (this.activeCatogories.length === 0) {
-        this.$Message.error('请选择文章分类');
-        return false
-      }
-      if (this.title.length === 0) {
-        this.$Message.error('请输入文章标题');
-        return false;
-      } else {
-        return true;
-      }
+
+      return true
+
     },
     handlePreview() {
       if (this.canPublish()) {
@@ -333,27 +331,27 @@ export default {
     },
     async handlePublish() {
       if (this.canPublish()) {
-        this.publishLoading = true;
-        console.log('看看结果')
-        console.log(this.avtiveTags.map(x => { return x._id }))
+        // this.publishLoading = true;
+        this.form.content = tinymce.activeEditor.getContent()
+        let formCory = JSON.parse(JSON.stringify(this.form))
+        const key = Object.keys(formCory).forEach(x => {
+          if (formCory[x] === null || formCory[x] === '' || formCory[x] === []) {
+            delete formCory[x]
+          }
+        })
+        console.log('看看form')
+        console.log(formCory)
         const params = {
-          url: '/article/add',
-          payload: {
-            title: this.title,
-            content: this.content,
-            keyword: this.keyword,
-            description: this.description,
-            tag: JSON.stringify(this.avtiveTags.map(x => { return x._id })),
-            category: JSON.stringify(this.activeCatogories.map(x => { return x._id }))
-          },
+          url: '/product/add',
+          payload: formCory,
           auth: true
         }
         const result = await this.post(params)
         this.publishLoading = false;
         if (result.code === 1) {
           this.$Notice.success({
-            title: '发送成功',
-            desc: '文章《' + this.title + '》保存成功',
+            title: '商品发布成功',
+            desc: '商品《' + this.title + '》保存成功',
             duration: 3
           });
         } else {
@@ -379,93 +377,6 @@ export default {
   mounted() {
     this.brandList()
     this.tagList()
-    this.articleTagList = [
-      { value: 'vue' },
-      { value: 'iview' },
-      { value: 'ES6' },
-      { value: 'webpack' },
-      { value: 'babel' },
-      { value: 'eslint' }
-    ];
-    this.classificationList = [
-      {
-        title: 'Vue实例',
-        expand: true,
-        children: [
-          {
-            title: '数据与方法',
-            expand: true
-          },
-          {
-            title: '生命周期',
-            expand: true
-          }
-        ]
-      },
-      {
-        title: 'Class与Style绑定',
-        expand: true,
-        children: [
-          {
-            title: '绑定HTML class',
-            expand: true,
-            children: [
-              {
-                title: '对象语法',
-                expand: true
-              },
-              {
-                title: '数组语法',
-                expand: true
-              },
-              {
-                title: '用在组件上',
-                expand: true
-              }
-            ]
-          },
-          {
-            title: '生命周期',
-            expand: true
-          }
-        ]
-      },
-      {
-        title: '模板语法',
-        expand: true,
-        children: [
-          {
-            title: '插值',
-            expand: true
-          },
-          {
-            title: '指令',
-            expand: true
-          },
-          {
-            title: '缩写',
-            expand: true
-          }
-        ]
-      }
-    ];
-    this.offenUsedClass = [
-      {
-        title: 'vue实例'
-      },
-      {
-        title: '生命周期'
-      },
-      {
-        title: '模板语法'
-      },
-      {
-        title: '插值'
-      },
-      {
-        title: '缩写'
-      }
-    ];
     tinymce.init({
       selector: '#articleEditor',
       branding: false,
