@@ -27,8 +27,8 @@ export default {
       imageName: '',
       tableColumns1: [
         {
-          title: '文章',
-          key: 'title',
+          title: '商品',
+          key: 'name',
           width: 200,
           render: (h, params) => {
             const row = params.row;
@@ -38,8 +38,10 @@ export default {
               style: {
                 textAlign: 'center',
                 padding: '4px',
-                height: '120px',
-                width: '200px',
+                height: '100px',
+                width: '160px',
+                border: '1px solid #80808040',
+                borderRadius: '4px',
                 background: 'url(http://mongoosejs.com/docs/images/mongoose5_62x30_transparent.png)',
                 backgroundSize: 'cover'
               }
@@ -217,9 +219,10 @@ export default {
         }
       })
     },
-    async articleList() {
+    // 产品列表
+    async productList() {
       const params = {
-        url: 'article/list',
+        url: 'product/list',
         payload: {}
       }
       const result = await this.post(params)
@@ -232,7 +235,7 @@ export default {
 
   },
   mounted() {
-    this.articleList()
+    this.productList()
   }
 };
 </script>
