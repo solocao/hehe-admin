@@ -132,8 +132,29 @@ export default {
   },
   data() {
     return {
+      value1: [],
+      data1: [{
+        value: 'beijing',
+        label: '北京',
+        _label: 'asf'      }
+      ],
+      data: [{
+        create_at: "2018-07-06T10:06:17.756Z",
+        create_user: "5b388dd281a1a55c0588c78f",
+        description: "阿迪达斯",
+        extends: [],
+        id: 1,
+        label: "阿迪达斯",
+        name: "阿迪达斯",
+        pid: null,
+        slug: "adidas",
+        value: "5b3f3f193938383b7b8a9ce9",
+        __v: 0,
+        _id: "5b3f3f193938383b7b8a9ce9"
+      }],
       content: '<h2>I am Example</h2>',
-      brandData: null,
+      // 这个设定很残暴,必须要[]初始化
+      brandData: [],
       brandValue: ["5b3f3f193938383b7b8a9ce9"],
       editorOption: {
         // some quill options
