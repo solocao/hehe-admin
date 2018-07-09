@@ -33,23 +33,24 @@ export default {
           render: (h, params) => {
             const row = params.row;
             console.log(row.title)
-            const text = row.title
+            const text = row.name
+            const img_url = row.img_list[0]
             return h('div', {
               style: {
                 textAlign: 'center',
-                padding: '4px',
+                padding: '0px',
                 height: '100px',
                 width: '160px',
                 border: '1px solid #80808040',
                 borderRadius: '4px',
-                background: 'url(http://mongoosejs.com/docs/images/mongoose5_62x30_transparent.png)',
+                background: 'url(' + img_url + ')',
                 backgroundSize: 'cover'
               }
             }, text);
           }
         },
         {
-          title: '分类目录',
+          title: '品牌',
           key: 'category'
         },
         {
@@ -125,7 +126,7 @@ export default {
                       this.show(params.index)
                     }
                   }
-                }, '编辑文章'),
+                }, '编辑商品'),
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -167,7 +168,7 @@ export default {
                       this.openPreview(params.row._id)
                     }
                   }
-                }, '查看文章')
+                }, '查看商品')
               ]);
           }
         }

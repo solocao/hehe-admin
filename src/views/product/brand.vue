@@ -28,6 +28,9 @@
             <Input type="textarea" v-model="form.description"></Input>
           </FormItem>
           <FormItem label="图片地址">
+            <Upload class="form-upload" :action="uploadUrl" :on-success="uploadSuccess" :show-upload-list="false" :format="['jpg','jpeg','png']" :max-size="2048">
+              <Button type="ghost" size="small" icon="ios-cloud-upload-outline">上传图片</Button>
+            </Upload>
             <Input type="textarea" v-model="form.image"></Input>
           </FormItem>
         </Form>
@@ -43,11 +46,14 @@
   </div>
 </template>
 <script>
+import config from '../../config'
 export default {
   data() {
     return {
+      uploadUrl: config.upload,
       tableData: [],
       imageName: '',
+
       form: {
         name: null,
         slug: null,
@@ -58,7 +64,23 @@ export default {
       tableColumns1: [
         {
           title: '名称',
-          key: 'name'
+          key: 'name',
+          width: 200,
+          render: (h, params) => {
+            const row = params.row;
+            const text = row.name
+            const img_url = row.img_url
+            return h('div', {
+              style: {
+                textAlign: 'center',
+                padding: '0px',
+                height: '100px',
+                width: '160px',
+                background: 'url(' + img_url + ')',
+                backgroundSize: 'cover'
+              }
+            }, text);
+          }
         },
         {
           title: '别名',
@@ -76,6 +98,11 @@ export default {
     };
   },
   methods: {
+    // 处理上传成功
+    uploadSuccess(evnet, file) {
+      this.$Message.info('图片上传成功')
+      this.form.image = file.response.url
+    },
     async brandList() {
       const params = {
         url: '/brand/list',
@@ -122,6 +149,12 @@ export default {
 
 <style lang="stylus">
 @import './brand.styl';
+
+.form-upload {
+  position: absolute;
+  top: -33px;
+  right: 0px;
+}
 </style>
 
 

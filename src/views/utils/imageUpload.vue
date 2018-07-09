@@ -25,7 +25,7 @@
                 <Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
             </template>
         </div>
-        <Upload ref="upload" :show-upload-list="false" :default-file-list="defaultList" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" action="http://localhost:3001/store/file" style="display: inline-block;width:58px;">
+        <Upload ref="upload" :show-upload-list="false" :on-success="handleSuccess" :format="['jpg','jpeg','png']" :max-size="2048" :on-format-error="handleFormatError" :on-exceeded-size="handleMaxSize" :before-upload="handleBeforeUpload" multiple type="drag" action="http://localhost:3001/store/file" style="display: inline-block;width:58px;">
             <div style="width: 58px;height:58px;line-height: 58px;">
                 <Icon type="camera" size="20"></Icon>
             </div>
@@ -38,30 +38,43 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            defaultList: [
+    props: {
+        imageList: {
+            type: Array,
+            default: function () {
+                return [{
+                    'name': 'a42bdcc1178e62b4694c830f028db5c0',
+                    'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
+                },
                 {
                     'name': 'bc7521e033abdd1e92222d733590f104',
                     'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-                }
-            ],
+                }];
+            } },
+        uploadList: {
+            type: Array,
+            default: function () {
+                return [];
+            }
+        }
+    },
+    data () {
+        return {
             imgUrl: '',
-            visible: false,
-            uploadList: []
+            visible: false
         };
     },
     methods: {
-        handleView(item) {
+        handleView (item) {
             this.imgUrl = item.url;
             this.visible = true;
         },
-        handleRemove(file) {
+        handleRemove (file) {
             const fileList = this.$refs.upload.fileList;
             this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
         },
         // 复制链接
-        handleCopy(item) {
+        handleCopy (item) {
             const self = this;
             this.$copyText(item.url).then(function (e) {
                 self.$Message.info('已复制到粘贴板');
@@ -69,23 +82,23 @@ export default {
                 self.$Message.info('复制出错');
             });
         },
-        handleSuccess(res, file) {
+        handleSuccess (res, file) {
             file.url = res.url;
             file.name = '7eb99afb9d5f317c912f08b5212fd69a';
         },
-        handleFormatError(file) {
+        handleFormatError (file) {
             this.$Notice.warning({
                 title: 'The file format is incorrect',
                 desc: 'File format of ' + file.name + ' is incorrect, please select jpg or png.'
             });
         },
-        handleMaxSize(file) {
+        handleMaxSize (file) {
             this.$Notice.warning({
                 title: 'Exceeding file size limit',
                 desc: 'File  ' + file.name + ' is too large, no more than 2M.'
             });
         },
-        handleBeforeUpload() {
+        handleBeforeUpload () {
             const check = this.uploadList.length < 5;
             if (!check) {
                 this.$Notice.warning({
@@ -95,8 +108,13 @@ export default {
             return check;
         }
     },
-    mounted() {
+    mounted () {
         this.uploadList = this.$refs.upload.fileList;
+    },
+    watch: {
+        uploadList: function (newValue, oldValue) {
+            this.$emit('update:imageList', newValue);
+        }
     }
 };
 </script>

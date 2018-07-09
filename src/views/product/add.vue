@@ -24,7 +24,7 @@
             <Cascader :data="brandData" v-model="brandValue" style="width:300px"></Cascader>
           </FormItem>
           <FormItem label="商品图片">
-            <image-upload></image-upload>
+            <image-upload :imageList.sync="imageList"></image-upload>
           </FormItem>
         </Form>
         <div class="margin-top-20">
@@ -124,6 +124,7 @@
 <script>
 import tinymce from 'tinymce';
 import imageUpload from '../utils/imageUpload.vue'
+import config from '../../config'
 
 export default {
   name: 'product-add',
@@ -132,6 +133,7 @@ export default {
   },
   data() {
     return {
+      imageList: [],
       value1: [],
       data1: [{
         value: 'beijing',
@@ -353,7 +355,10 @@ export default {
     async handlePublish() {
       if (this.canPublish()) {
         // this.publishLoading = true;
+        // 获取文章内容
         this.form.content = tinymce.activeEditor.getContent()
+        // 获取图片
+        this.form.img_list = JSON.stringify(this.imageList.map(x => { return x.url }))
         let formCory = JSON.parse(JSON.stringify(this.form))
         const key = Object.keys(formCory).forEach(x => {
           if (formCory[x] === null || formCory[x] === '' || formCory[x] === []) {
@@ -423,6 +428,11 @@ export default {
   },
   destroyed() {
     tinymce.get('articleEditor').destroy();
+  },
+  watch: {
+    imageList: function (newValue, oldValue) {
+      console.log(newValue)
+    }
   }
 };
 </script>
