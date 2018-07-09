@@ -31,7 +31,7 @@
             <Upload class="form-upload" :action="uploadUrl" :on-success="uploadSuccess" :show-upload-list="false" :format="['jpg','jpeg','png']" :max-size="2048">
               <Button type="ghost" size="small" icon="ios-cloud-upload-outline">上传图片</Button>
             </Upload>
-            <Input type="textarea" v-model="form.image"></Input>
+            <Input type="textarea" v-model="form.imgUrl"></Input>
           </FormItem>
         </Form>
         <Row class="margin-top-20 publish-button-con">
@@ -47,19 +47,21 @@
 </template>
 <script>
 import config from '../../config'
+import dayjs from 'dayjs'
 export default {
   data() {
     return {
+      // add 增加  update 修改 保存
+      btnType: 'add',
       uploadUrl: config.upload,
       tableData: [],
       imageName: '',
-
       form: {
         name: null,
         slug: null,
         description: null,
         color: null,
-        image: null
+        imgUrl: null
       },
       tableColumns1: [
         {
@@ -92,7 +94,55 @@ export default {
         },
         {
           title: '创建时间',
-          key: 'create_at'
+          key: 'create_at',
+          render: (h, params) => {
+            return h('span',
+              dayjs(params.row.create_at).format('YYYY-MM-DD HH:mm:ss')
+            );
+          }
+        },
+        {
+          title: '操作',
+          key: 'state',
+          render: (h, params) => {
+            return h('div', {
+              style: {
+                display: 'flex',
+                flexDirection: 'column'
+              }
+            },
+              [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    margin: '1px'
+
+                  },
+                  on: {
+                    click: () => {
+                      this.edit(params.row)
+                    }
+                  }
+                }, '编辑'),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  style: {
+                    margin: '1px'
+                  },
+                  on: {
+                    click: () => {
+                      this.delete(params.row)
+                    }
+                  }
+                }, '删除')
+              ]);
+          }
         }
       ]
     };
@@ -101,7 +151,21 @@ export default {
     // 处理上传成功
     uploadSuccess(evnet, file) {
       this.$Message.info('图片上传成功')
-      this.form.image = file.response.url
+      this.form.imgUrl = file.response.url
+    },
+    // 编辑
+    edit(row) {
+      console.log(row)
+      const { _id, name, slug, img_url, description } = row
+      this.form.name = name
+      this.form.slug = slug
+      this.form.description = description
+      this.form.imgUrl = img_url
+    },
+    // 删除
+    delete(row) {
+      alert('开始删除')
+
     },
     async brandList() {
       const params = {
@@ -123,7 +187,7 @@ export default {
           name: this.form.name,
           slug: this.form.slug,
           description: this.form.description,
-          img_url: this.form.image
+          img_url: this.form.imgUrl
         },
         auth: true
       }
@@ -132,7 +196,7 @@ export default {
         this.form.name = null
         this.form.slug = null
         this.form.description = null
-        this.form.image = null
+        this.form.imgUrl = null
         this.$Message.info(result.msg)
         this.brandList()
       } else {

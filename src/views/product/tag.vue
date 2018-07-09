@@ -4,9 +4,10 @@
       <Col span="16">
 
       <Card>
-        <p slot="title">
+        <p slot="title" style="overflow:visible">
           <Icon type="images"></Icon>
           商品标签
+          <Button size="small" type="primary" class="card-right-btn" @click="addInit">新增标签</Button>
         </p>
         <Table :data="tableData" :columns="tableColumns1" stripe ref="table2image"></Table>
       </Card>
@@ -72,6 +73,12 @@ export default {
     };
   },
   methods: {
+    addInit() {
+      this.form.name = null
+      this.form.slug = null
+      this.form.description = null
+      this.$Message.info('在右侧栏进行新增操作')
+    },
     async tagList() {
       const params = {
         url: '/tag/list',
@@ -117,6 +124,10 @@ export default {
 
 <style lang="stylus">
 @import './tag.styl';
+
+.card-right-btn {
+  float: right;
+}
 </style>
 
 

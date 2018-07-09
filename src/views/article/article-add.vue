@@ -8,6 +8,9 @@
                     <FormItem label="文章标题" :error="articleError">
                         <Input v-model="title" @on-blur="titleBlur" />
                     </FormItem>
+                    <FormItem label="原文链接" :error="descriptionError">
+                        <Input v-model="description" @on-blur="descriptionBlur" />
+                    </FormItem>
                     <FormItem label="关键字" :error="keyworError">
                         <Input v-model="keyword" @on-blur="keywordBlur" />
                     </FormItem>
@@ -132,8 +135,8 @@ export default {
             // 标题
             title: '',
             tags: null,
-            avtiveTags:null,
-            activeCatogories:null,
+            avtiveTags: null,
+            activeCatogories: null,
             // 关键字
             keyword: '',
             // 描述
@@ -350,7 +353,7 @@ export default {
             if (this.canPublish()) {
                 this.publishLoading = true;
                 console.log('看看结果')
-                console.log(this.avtiveTags.map(x=>{return x._id}))
+                console.log(this.avtiveTags.map(x => { return x._id }))
                 const params = {
                     url: '/article/add',
                     payload: {
@@ -358,8 +361,8 @@ export default {
                         content: this.content,
                         keyword: this.keyword,
                         description: this.description,
-                        tag:JSON.stringify(this.avtiveTags.map(x=>{return x._id})),
-                        category:JSON.stringify(this.activeCatogories.map(x=>{return x._id}))
+                        tag: JSON.stringify(this.avtiveTags.map(x => { return x._id })),
+                        category: JSON.stringify(this.activeCatogories.map(x => { return x._id }))
                     },
                     auth: true
                 }
