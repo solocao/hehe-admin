@@ -53,36 +53,17 @@ export default {
           title: '品牌',
           key: 'category'
         },
-        {
-          title: '标签',
-          key: 'portrayal',
-          render: (h, params) => {
-            return h('Poptip', {
-              props: {
-                trigger: 'hover',
-                title: params.row.portrayal.length + '个画像',
-                placement: 'bottom'
-              }
-            }, [
-                h('Tag', params.row.portrayal.length),
-                h('div', {
-                  slot: 'content'
-                }, [
-                    h('ul', this.tableData1[params.index].portrayal.map(item => {
-                      return h('li', {
-                        style: {
-                          textAlign: 'center',
-                          padding: '4px'
-                        }
-                      }, item);
-                    }))
-                  ])
-              ]);
-          }
-        },
+
         {
           title: '标签',
           key: 'tag',
+          render: (h, params) => {
+            const tags = []
+            params.row.tag.forEach(x => {
+              tags.push(h('Tag', x.name))
+            })
+            return h('div', tags);
+          }
 
         },
         {

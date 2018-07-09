@@ -234,7 +234,8 @@ export default {
     activeTag(t) {
       t.active = !t.active
       // 给form tag 附值
-      this.form.tag = this.tags.filter(x => x.active === true)
+      this.form.tag = JSON.stringify(this.tags.filter(x => x.active === true).map(x => { return x._id }))
+      console.log(this.form.tag)
     },
     async brandList() {
       const params = {
