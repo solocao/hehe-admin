@@ -172,7 +172,6 @@ export default {
     setCover(name, num) {
       const index = this.selected.findIndex(x => x.name === name)
       const cover = this.selected[index].cover
-
       if (cover == undefined) {
         this.selected[index].cover = num
         this.$forceUpdate();

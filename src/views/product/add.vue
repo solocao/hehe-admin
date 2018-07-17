@@ -26,7 +26,7 @@
           <FormItem label="商品图片">
             <!-- <image-upload :imageList.sync="imageList"></image-upload>
             <Button @click="handleEditOpenness" type="text">选择图片</Button> -->
-            <upload-card></upload-card>
+            <upload-card ref="uploadCard"></upload-card>
           </FormItem>
         </Form>
         <div class="margin-top-20">
@@ -357,12 +357,18 @@ export default {
       }
     },
     async handlePublish() {
+      const selectImages = this.$refs.uploadCard.selected;
+      const cover2 = selectImages.filter(x => x.cover === 2).map(x => { return x.url })
+      const cover1 = selectImages.filter(x => x.cover === 1).map(x => { return x.url })
+      this.form.img_list = JSON.stringify(cover2.concat(cover1))
+      alert(this.form.img_list)
+      return 'asf';
       if (this.canPublish()) {
         // this.publishLoading = true;
         // 获取文章内容
         this.form.content = tinymce.activeEditor.getContent()
         // 获取图片
-        this.form.img_list = JSON.stringify(this.imageList.map(x => { return x.url }))
+     
         let formCory = JSON.parse(JSON.stringify(this.form))
         const key = Object.keys(formCory).forEach(x => {
           if (formCory[x] === null || formCory[x] === '' || formCory[x] === []) {
