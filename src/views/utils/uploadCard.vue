@@ -1,19 +1,37 @@
 <template>
-  <div>
-    <Card style="width:850px">
-      <p slot="title">
-        <Icon type="ios-film-outline"></Icon>
-        我的图片
-      </p>
-      <Input size="small" slot="extra" v-model="search" icon="ios-search-strong" placeholder="Enter something..." style="width: 200px"></Input>
+  <div class="upload-card">
+    <div class="choose-img">
+      <div class="choose-item" v-for="item in selected">
+        <img :src="item.url" alt="">
+        <div class="choose-title" :class="chooseColor(item.cover)">
+          {{coverTitle(item.cover)}}
+        </div>
+        <div class="choose-button">
+          <div class="btn-i" @click="setCover(item.name,2)">设为封面</div>
+          <div class="btn-i" @click="setCover(item.name,1)">设为配图</div>
+          <div class="btn-i">复制链接</div>
+        </div>
+      </div>
+      <div class="add-item" @click="modalCard=true">
+        <Icon type="plus-round" :size="40"></Icon>
+      </div>
+
+    </div>
+
+    <Modal v-model="modalCard" title="添加图片" width="850">
+
+      <Input v-if="false" size="small" v-model="search" icon="ios-search-strong" placeholder="Enter something..." style="width: 200px"></Input>
+
       <Row>
         <Col span="6">
-        <Button type="primary">上传图片</Button>
+        <Upload multiple :show-upload-list="false" :action="uploadUrl" :on-success="uploadSuccess">
+          <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+        </Upload>
         </Col>
         <Col span="18">
-        <Input v-model="value11">
+        <Input v-model="imgUrl">
         <span slot="prepend">网络图片</span>
-        <Button slot="append" @click="haha" type="primary">点击上传</Button>
+        <Button slot="append" @click="uploadImgByUrl" type="primary">点击上传</Button>
         </Input>
         </Col>
       </Row>
@@ -27,189 +45,365 @@
       </Row>
       <Row style="height:700px;margin-top:10px">
         <ul class="file-img-list">
-          <li class="img-item" v-for="i in 18">
+          <li class="img-item" v-for="item in images" @click="selectItem(item)">
             <div class="img-show">
-              <img src="https://img.yzcdn.cn/upload_files/2018/07/06/FtDNUryxH9m8rDjNY9lbVW_VNIxb.png?imageView2/2/w/240/h/240/q/75/format/webp" alt="">
+              <img :src="item.url" alt="">
             </div>
             <div class="img-meta">
               400*34
             </div>
             <div class="img-title">
-              ceshi.png
+              {{item.name}}
             </div>
-            <div class="item-attach" v-if="false">
+            <div class="item-attach" v-if="attachShow(item.name)">
               <span>1</span>
             </div>
           </li>
         </ul>
         <Page :total="100"></Page>
       </Row>
-    </Card>
+    </Modal>
 
   </div>
 </template>
 <script>
+import config from '../../config'
 export default {
-    data () {
-        return {
-            value11: '',
-            search: '1231',
-            data5: [
-                {
-                    title: 'parent 1',
-                    expand: true,
-                    render: (h, { root, node, data }) => {
-                        console.log('看看node');
-                        console.log(node);
-                        return h('span', {
-                            style: {
-                                display: 'inline-block',
-                                width: '100%'
-                            }
-                        }, [
-                            h('span', [
-                                h('Icon', {
-                                    props: {
-                                        type: 'ios-folder-outline'
-                                    },
-                                    style: {
-                                        marginRight: '8px'
-                                    }
-                                }),
-                                h('span', data.title)
-                            ]),
-                            h('span', {
-                                style: {
-                                    display: 'inline-block',
-                                    float: 'right',
-                                    marginRight: '32px'
-                                }
-                            }, [
-                                h('Button', {
-                                    props: Object.assign({}, this.buttonProps, {
-                                        icon: 'ios-plus-empty',
-                                        type: 'primary'
-                                    }),
-                                    style: {
-                                        width: '52px'
-                                    },
-                                    on: {
-                                        click: () => { this.append(data); }
-                                    }
-                                })
-                            ])
-                        ]);
-                    }
-                    // children: [
-                    //     {
-                    //         title: 'child 1-1',
-                    //         expand: true,
-                    //         children: [
-                    //             {
-                    //                 title: 'leaf 1-1-1',
-                    //                 expand: true
-                    //             },
-                    //             {
-                    //                 title: 'leaf 1-1-2',
-                    //                 expand: true
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         title: 'child 1-2',
-                    //         expand: true,
-                    //         children: [
-                    //             {
-                    //                 title: 'leaf 1-2-1',
-                    //                 expand: true
-                    //             },
-                    //             {
-                    //                 title: 'leaf 1-2-1',
-                    //                 expand: true
-                    //             }
-                    //         ]
-                    //     }
-                    // ]
-                }
-            ],
-            buttonProps: {
-                type: 'ghost',
-                size: 'small'
-            }
-        };
-    },
-    methods: {
-        haha () {
-            alert('哈哈');
-        },
-        renderContent (h, { root, node, data }) {
+  data() {
+    return {
+      modalCard: false,
+      imgUrl: '',
+      images: [],
+      uploadUrl: config.upload,
+      value11: '',
+      search: '1231',
+      data5: [
+        {
+          title: 'parent 1',
+          expand: true,
+          render: (h, { root, node, data }) => {
+            console.log('看看node');
+            console.log(node);
             return h('span', {
-                style: {
-                    display: 'inline-block',
-                    width: '100%'
-                }
+              style: {
+                display: 'inline-block',
+                width: '100%'
+              }
             }, [
                 h('span', [
-                    h('Icon', {
-                        props: {
-                            type: 'ios-folder-outline'
-                        },
-                        style: {
-                            marginRight: '8px'
-                        }
-                    }),
-                    h('span', data.title)
+                  h('Icon', {
+                    props: {
+                      type: 'ios-folder-outline'
+                    },
+                    style: {
+                      marginRight: '8px'
+                    }
+                  }),
+                  h('span', data.title)
                 ]),
                 h('span', {
-                    style: {
-                        display: 'inline-block',
-                        float: 'right',
-                        marginRight: '32px'
-                    }
+                  style: {
+                    display: 'inline-block',
+                    float: 'right',
+                    marginRight: '32px'
+                  }
                 }, [
                     h('Button', {
-                        props: Object.assign({}, this.buttonProps, {
-                            icon: 'ios-plus-empty'
-                        }),
-                        style: {
-                            marginRight: '8px'
-                        },
-                        on: {
-                            click: () => { this.append(data); }
-                        }
-                    }),
-                    h('Button', {
-                        props: Object.assign({}, this.buttonProps, {
-                            icon: 'ios-minus-empty'
-                        }),
-                        on: {
-                            click: () => { this.remove(root, node, data); }
-                        }
+                      props: Object.assign({}, this.buttonProps, {
+                        icon: 'ios-plus-empty',
+                        type: 'primary'
+                      }),
+                      style: {
+                        width: '52px'
+                      },
+                      on: {
+                        click: () => { this.append(data); }
+                      }
                     })
-                ])
-            ]);
-        },
-        append (data) {
-            console.log('看看');
-            console.log(data);
-            const children = data.children || [];
-            children.push({
-                title: 'appended node',
-                expand: true
-            });
-            this.$set(data, 'children', children);
-        },
-        remove (root, node, data) {
-            const parentKey = root.find(el => el === node).parent;
-            const parent = root.find(el => el.nodeKey === parentKey).node;
-            const index = parent.children.indexOf(data);
-            parent.children.splice(index, 1);
+                  ])
+              ]);
+          }
+          // children: [
+          //     {
+          //         title: 'child 1-1',
+          //         expand: true,
+          //         children: [
+          //             {
+          //                 title: 'leaf 1-1-1',
+          //                 expand: true
+          //             },
+          //             {
+          //                 title: 'leaf 1-1-2',
+          //                 expand: true
+          //             }
+          //         ]
+          //     },
+          //     {
+          //         title: 'child 1-2',
+          //         expand: true,
+          //         children: [
+          //             {
+          //                 title: 'leaf 1-2-1',
+          //                 expand: true
+          //             },
+          //             {
+          //                 title: 'leaf 1-2-1',
+          //                 expand: true
+          //             }
+          //         ]
+          //     }
+          // ]
         }
+      ],
+      buttonProps: {
+        type: 'ghost',
+        size: 'small'
+      },
+
+      // cover 2 封面  1 配图 0普通
+      selected: []
+    };
+  },
+  mounted() {
+    this.imgList()
+  },
+  methods: {
+    // 设置封面
+    setCover(name, num) {
+      const index = this.selected.findIndex(x => x.name === name)
+      const cover = this.selected[index].cover
+
+      if (cover == undefined) {
+        this.selected[index].cover = num
+        this.$forceUpdate();
+        return true
+      }
+      if (num === 2) {
+        const i = this.selected.findIndex(x => x.cover === 2)
+        if (i > -1) {
+          this.selected[i].cover = 0
+        }
+        this.selected[index].cover = 2
+        this.$forceUpdate();
+        return true
+      }
+      if (cover === num) {
+        this.selected[index].cover = 0
+        this.$forceUpdate();
+        return true
+      }
+
+    },
+    coverTitle(cover) {
+      if (cover == 2) { return '封面' }
+      if (cover == 1) { return '配图' }
+      return '素材'
+    },
+    chooseColor(cover) {
+      if (cover == 2) { return 'choose-color-2' }
+      if (cover == 1) { return 'choose-color-1' }
+      return ''
+    },
+    selectItem(item) {
+      const { name } = item
+      const index = this.selected.findIndex(x => x.name === name)
+      if (index > -1) {
+        this.selected.splice(index, 1)
+      } else {
+        this.selected.push(item)
+      }
+    },
+    attachShow(name) {
+      if (this.selected.findIndex(x => x.name === name) > -1) {
+        return true
+      } else {
+        return false
+      }
+    },
+    async uploadImgByUrl() {
+      const params = {
+        url: 'image/url',
+        payload: {
+          url: this.imgUrl
+        },
+        auth: true
+      }
+      const result = await this.post(params)
+      console.log('看看结果')
+      console.log(result)
+
+    },
+
+    uploadSuccess(evnet, file) {
+      this.$Message.info('图片上传成功')
+      // this.form.imgUrl = file.response.url
+      this.imgList()
+
+    },
+    haha() {
+      alert('哈哈');
+    },
+    async imgList() {
+      const params = {
+        url: 'media/image/list',
+        payload: {},
+        auth: true
+      }
+      const result = await this.post(params)
+      this.images = result
+      console.log('看看result')
+      console.log(result)
+
+
+    },
+    renderContent(h, { root, node, data }) {
+      return h('span', {
+        style: {
+          display: 'inline-block',
+          width: '100%'
+        }
+      }, [
+          h('span', [
+            h('Icon', {
+              props: {
+                type: 'ios-folder-outline'
+              },
+              style: {
+                marginRight: '8px'
+              }
+            }),
+            h('span', data.title)
+          ]),
+          h('span', {
+            style: {
+              display: 'inline-block',
+              float: 'right',
+              marginRight: '32px'
+            }
+          }, [
+              h('Button', {
+                props: Object.assign({}, this.buttonProps, {
+                  icon: 'ios-plus-empty'
+                }),
+                style: {
+                  marginRight: '8px'
+                },
+                on: {
+                  click: () => { this.append(data); }
+                }
+              }),
+              h('Button', {
+                props: Object.assign({}, this.buttonProps, {
+                  icon: 'ios-minus-empty'
+                }),
+                on: {
+                  click: () => { this.remove(root, node, data); }
+                }
+              })
+            ])
+        ]);
+    },
+    append(data) {
+      console.log('看看');
+      console.log(data);
+      const children = data.children || [];
+      children.push({
+        title: 'appended node',
+        expand: true
+      });
+      this.$set(data, 'children', children);
+    },
+    remove(root, node, data) {
+      const parentKey = root.find(el => el === node).parent;
+      const parent = root.find(el => el.nodeKey === parentKey).node;
+      const index = parent.children.indexOf(data);
+      parent.children.splice(index, 1);
     }
+  }
 };
 </script>
 
 <style lang="stylus" scoped>
+.upload-card {
+  .choose-img {
+    width: 100%;
+
+    .choose-item {
+      float: left;
+      height: 88px;
+      width: 88px;
+      position: relative;
+      margin-right: 6px;
+      margin-bottom: 6px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .choose-title {
+        position: absolute;
+        bottom: 0px;
+        background: rgba(0, 0, 0, 0.431);
+        width: 100%;
+        height: 22px;
+        font-size: 12px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .choose-color-2 {
+        background: #f30000ed;
+      }
+
+      .choose-color-1 {
+        background: #ff9800f0;
+      }
+
+      .choose-button {
+        display: none;
+      }
+
+      &:hover {
+        .choose-button {
+          display: block;
+          position: absolute;
+          top: 0px;
+          left: 0px;
+          background: #000000b0;
+          width: 100%;
+          height: 66px;
+          font-size: 12px;
+          color: white;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+
+          .btn-i {
+            cursor: pointer;
+            height: 20px;
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+
+    .add-item {
+      height: 88px;
+      width: 88px;
+      float: left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid grey;
+    }
+  }
+}
+
 .file-tree {
   height: 600px;
   background: #EEEEEE;
@@ -263,6 +457,8 @@ export default {
       align-items: center;
       justify-content: center;
       font-size: 12px;
+      overflow: hidden;
+      height: 20px;
     }
 
     .item-attach {

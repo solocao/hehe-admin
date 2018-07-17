@@ -65,6 +65,7 @@ export default {
         };
     },
     methods: {
+
         handleView (item) {
             this.imgUrl = item.url;
             this.visible = true;

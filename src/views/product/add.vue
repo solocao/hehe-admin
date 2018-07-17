@@ -24,7 +24,9 @@
             <Cascader :data="brandData" v-model="brandValue" style="width:300px"></Cascader>
           </FormItem>
           <FormItem label="商品图片">
-            <image-upload :imageList.sync="imageList"></image-upload>
+            <!-- <image-upload :imageList.sync="imageList"></image-upload>
+            <Button @click="handleEditOpenness" type="text">选择图片</Button> -->
+            <upload-card></upload-card>
           </FormItem>
         </Form>
         <div class="margin-top-20">
@@ -124,12 +126,13 @@
 <script>
 import tinymce from 'tinymce';
 import imageUpload from '../utils/imageUpload.vue'
+import uploadCard from '../utils/uploadCard.vue'
 import config from '../../config'
 
 export default {
   name: 'product-add',
   components: {
-    imageUpload
+    uploadCard
   },
   data() {
     return {
