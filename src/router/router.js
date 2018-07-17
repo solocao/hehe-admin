@@ -106,6 +106,13 @@ export const appRouter = [
         component: Main,
         children: [
             {
+                path: 'upload',
+                icon: 'compose',
+                name: 'upload',
+                title: '上传插件测试',
+                component: () => import('@/views/utils/uploadCard.vue')
+            },
+            {
                 path: 'add',
                 icon: 'compose',
                 name: 'text-editor',

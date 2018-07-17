@@ -36,7 +36,8 @@
         </Form>
         <Row class="margin-top-20 publish-button-con">
           <span class="publish-button" style="float:right">
-            <Button @click="brandAdd" :loading="publishLoading" icon="ios-checkmark" style="width:90px;" type="primary">确定</Button>
+            <Button @click="brandAdd" :loading="publishLoading" icon="ios-checkmark" style="width:90px;" type="primary">
+              {{}}确定</Button>
           </span>
         </Row>
       </Card>
