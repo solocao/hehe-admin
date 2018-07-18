@@ -13,6 +13,9 @@
             <FormItem label="商品描述">
                 <Input v-model="form.description" />
             </FormItem>
+            <FormItem label="跳转链接">
+                <Input v-model="form.link" />
+            </FormItem>
             <FormItem label="商品标签">
                 <Tag @click.native="activeTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
             </FormItem>
@@ -43,6 +46,8 @@ export default {
                 name: '测试商品',
                 // 商品内容
                 content: 'afsafaee',
+                // 商品跳转链接
+                link: null,
                 // 商品别名
                 slug: null,
                 // 商品描述
