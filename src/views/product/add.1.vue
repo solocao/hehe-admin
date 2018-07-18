@@ -4,7 +4,34 @@
     <Row>
       <Col span="18">
       <Card>
-        <content-form></content-form>
+        <Form ref="form" :model="form" :label-width="80" :rules="ruleValidate">
+          <FormItem prop="name" required="true" label="商品名称">
+            <Input v-model="form.name" />
+          </FormItem>
+          <FormItem label="商品编码" :error="articleError">
+            <Input v-model="form.code" />
+          </FormItem>
+          <FormItem label="商品关键字">
+            <Input v-model="form.keyword" />
+          </FormItem>
+          <FormItem label="商品描述">
+            <Input v-model="form.description" />
+          </FormItem>
+          <FormItem label="商品标签">
+            <Tag @click.native="activeTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
+          </FormItem>
+          <FormItem label="品牌">
+            <Cascader :data="brandData" v-model="brandValue" style="width:300px"></Cascader>
+          </FormItem>
+          <FormItem label="商品图片">
+            <!-- <image-upload :imageList.sync="imageList"></image-upload>
+            <Button @click="handleEditOpenness" type="text">选择图片</Button> -->
+            <upload-card ref="uploadCard"></upload-card>
+          </FormItem>
+        </Form>
+        <div class="margin-top-20">
+          <textarea id="articleEditor"></textarea>
+        </div>
       </Card>
       </Col>
       <Col span="6" class="padding-left-10">
@@ -98,13 +125,14 @@
 
 <script>
 import tinymce from 'tinymce';
-import contentForm from './contentForm.vue'
+import imageUpload from '../utils/imageUpload.vue'
+import uploadCard from '../utils/uploadCard.vue'
 import config from '../../config'
 
 export default {
   name: 'product-add',
   components: {
-    contentForm
+    uploadCard
   },
   data() {
     return {
@@ -130,7 +158,8 @@ export default {
         _id: "5b3f3f193938383b7b8a9ce9"
       }],
       content: '<h2>I am Example</h2>',
-
+      // 这个设定很残暴,必须要[]初始化
+      brandData: [],
       brandValue: ["5b3f3f193938383b7b8a9ce9"],
       editorOption: {
         // some quill options
@@ -194,11 +223,59 @@ export default {
       classificationFinalSelected: [], // 最后实际选择的目录
       publishLoading: false,
       addingNewTag: false, // 添加新标签
-      newTagName: '', // 新建标签
+      newTagName: '', // 新建标签名
+      ruleValidate: {
+        name: [
+          { required: true, message: '商品名称不能为空', trigger: 'blur' }
+        ],
+        city: [
+          { required: true, message: 'Please select the city', trigger: 'change' }
+        ]      }
     };
   },
   methods: {
-
+    activeTag(t) {
+      t.active = !t.active
+      // 给form tag 附值
+      this.form.tag = JSON.stringify(this.tags.filter(x => x.active === true).map(x => { return x._id }))
+      console.log(this.form.tag)
+    },
+    async brandList() {
+      const params = {
+        url: 'brand/list',
+        payload: {}
+      }
+      const result = await this.post(params)
+      const data = result.data
+      function nodeTree(tree) {
+        tree.forEach(e => {
+          e.value = e._id
+          e.label = e.name
+          if (e.children === undefined) {
+            return
+          } else {
+            nodeTree(e.children)
+          }
+        });
+      }
+      nodeTree(data)
+      this.brandData = data
+    },
+    // 获取商品tag
+    async tagList() {
+      const params = {
+        url: '/tag/list',
+        payload: {
+          type: 1
+        }
+      }
+      const result = await this.post(params)
+      const data = result.data
+      data.forEach(x => {
+        x.active = false
+      })
+      this.tags = result.data
+    },
     editArticlePath() {
       this.editLink = !this.editLink;
       this.editPathButtonType = this.editPathButtonType === 'ghost' ? 'success' : 'ghost';
@@ -331,7 +408,33 @@ export default {
     }
   },
   mounted() {
-
+    this.brandList()
+    this.tagList()
+    tinymce.init({
+      selector: '#articleEditor',
+      branding: false,
+      elementpath: false,
+      height: 600,
+      language: 'zh_CN.GB2312',
+      menubar: 'edit insert view format table tools',
+      theme: 'modern',
+      plugins: [
+        'advlist autolink lists link image charmap print preview hr anchor pagebreak imagetools',
+        'searchreplace visualblocks visualchars code fullscreen fullpage',
+        'insertdatetime media nonbreaking save table contextmenu directionality',
+        'emoticons paste textcolor colorpicker textpattern imagetools codesample'
+      ],
+      toolbar1: ' newnote print fullscreen preview | undo redo | insert | styleselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image emoticons media codesample',
+      autosave_interval: '20s',
+      image_advtab: true,
+      table_default_styles: {
+        width: '100%',
+        borderCollapse: 'collapse'
+      }
+    });
+  },
+  destroyed() {
+    tinymce.get('articleEditor').destroy();
   },
   watch: {
     imageList: function (newValue, oldValue) {

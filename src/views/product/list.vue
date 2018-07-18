@@ -95,7 +95,7 @@ export default {
               [
                 h('Button', {
                   props: {
-                    type: 'primary',
+                    type: 'info',
                     size: 'small'
                   },
                   style: {
@@ -110,7 +110,7 @@ export default {
                 }, '编辑商品'),
                 h('Button', {
                   props: {
-                    type: 'primary',
+                    type: 'warning',
                     size: 'small'
                   },
                   style: {
@@ -138,7 +138,7 @@ export default {
                 }, '移回收站'),
                 h('Button', {
                   props: {
-                    type: 'error',
+                    type: 'primary',
                     size: 'small'
                   },
                   style: {
