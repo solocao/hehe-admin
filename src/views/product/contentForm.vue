@@ -24,7 +24,7 @@
             </FormItem>
         </Form>
         <div class="margin-top-20">
-            <textarea id="articleEditor"></textarea>
+            <textarea id="articleEditor1"></textarea>
         </div>
     </div>
 </template>
@@ -85,10 +85,39 @@ export default {
             this.$refs.form.validate((valid) => {
                 if (valid) {
                     this.$Message.success('Success!');
+                    return true
                 } else {
                     this.$Message.error('Fail!');
+                    return false
                 }
             })
+        },
+        // 获取form表单信息
+        getForm() {
+            // 获取图片
+            this.form.img_list = this.$refs.uploadCard.getImageList()
+            // 获取文章内容
+            this.form.content = tinymce.activeEditor.getContent()
+            let formCory = JSON.parse(JSON.stringify(this.form))
+            const key = Object.keys(formCory).forEach(x => {
+                if (formCory[x] === null || formCory[x] === '' || formCory[x] === []) {
+                    delete formCory[x]
+                }
+            })
+            return formCory
+        },
+        // 设置form表单信息
+        setForm(form) {
+            const { name, category, content, count, create_at, img_list, keywords, official_price, sale_price, tag } = form
+            // 设置图片
+            this.$refs.uploadCard.setImageList(img_list)
+            // 商品名称
+            this.form.name = name;
+            // 商品售卖价格
+            this.form.sale_price = sale_price;
+            // 商品介绍文本
+            this.form.content = content
+            tinymce.activeEditor.setContent(content);
         },
         // 激活标签
         activeTag(t) {
@@ -139,7 +168,7 @@ export default {
         this.brandList()
         this.tagList()
         tinymce.init({
-            selector: '#articleEditor',
+            selector: '#articleEditor1',
             branding: false,
             elementpath: false,
             height: 600,
@@ -162,7 +191,7 @@ export default {
         });
     },
     destroyed() {
-        tinymce.get('articleEditor').destroy();
+        tinymce.get('articleEditor1').destroy();
     }
 
 };

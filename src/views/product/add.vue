@@ -4,7 +4,7 @@
     <Row>
       <Col span="18">
       <Card>
-        <content-form></content-form>
+        <content-form ref="form"></content-form>
       </Card>
       </Col>
       <Col span="6" class="padding-left-10">
@@ -68,7 +68,7 @@
             <Button @click="handleSaveDraft">保存草稿</Button>
           </span>
           <span class="publish-button">
-            <Button @click="handlePublish" :loading="publishLoading" type="primary">发布</Button>
+            <Button @click="publishProduct" :loading="publishLoading" type="primary">发布</Button>
           </span>
         </Row>
       </Card>
@@ -279,44 +279,30 @@ export default {
         //
       }
     },
-    async handlePublish() {
-      const selectImages = this.$refs.uploadCard.selected;
-      const cover2 = selectImages.filter(x => x.cover === 2).map(x => { return x.url })
-      const cover1 = selectImages.filter(x => x.cover === 1).map(x => { return x.url })
-      // 获取图片
-      this.form.img_list = JSON.stringify(cover2.concat(cover1))
-      if (this.canPublish()) {
-        // this.publishLoading = true;
-        // 获取文章内容
-        this.form.content = tinymce.activeEditor.getContent()
-        let formCory = JSON.parse(JSON.stringify(this.form))
-        const key = Object.keys(formCory).forEach(x => {
-          if (formCory[x] === null || formCory[x] === '' || formCory[x] === []) {
-            delete formCory[x]
-          }
-        })
-        console.log('看看form')
-        console.log(formCory)
-        const params = {
-          url: '/product/add',
-          payload: formCory,
-          auth: true
-        }
-        const result = await this.post(params)
-        this.publishLoading = false;
-        if (result.code === 1) {
-          this.$Notice.success({
-            title: '商品发布成功',
-            desc: '商品《' + this.title + '》保存成功',
-            duration: 3
-          });
-        } else {
-          this.$Notice.success({
-            title: '发送失败',
-            desc: '请联系管理员',
-            duration: 3
-          });
-        }
+    async publishProduct() {
+      if (!this.$refs.form.validForm) {
+        return false
+      }
+      const formData = this.$refs.form.getForm();
+      const params = {
+        url: '/product/add',
+        payload: formData,
+        auth: true
+      }
+      const result = await this.post(params)
+      this.publishLoading = false;
+      if (result.code === 1) {
+        this.$Notice.success({
+          title: '商品发布成功',
+          desc: '商品《' + formData.name + '》保存成功',
+          duration: 3
+        });
+      } else {
+        this.$Notice.success({
+          title: '商品发布失败',
+          desc: '请联系管理员',
+          duration: 3
+        });
       }
     },
     handleSelectTag() {

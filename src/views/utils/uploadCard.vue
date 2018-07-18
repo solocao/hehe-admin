@@ -159,7 +159,6 @@ export default {
         type: 'ghost',
         size: 'small'
       },
-
       // cover 2 封面  1 配图 0普通
       selected: []
     };
@@ -168,7 +167,7 @@ export default {
     this.imgList()
   },
   methods: {
-    // 设置封面
+    // 设置封面 配图
     setCover(name, num) {
       const index = this.selected.findIndex(x => x.name === name)
       const cover = this.selected[index].cover
@@ -219,6 +218,17 @@ export default {
         return false
       }
     },
+    // 还原选择的封面图
+    setImageList(images) {
+      this.selected = images;
+    },
+    // 获取需要向后台发送的图片数据
+    getImageList() {
+      const selectImages = this.selected;
+      const cover2 = selectImages.filter(x => x.cover === 2).map(x => { return { name: x.name, url: x.url, cover: x.cover } })
+      const cover1 = selectImages.filter(x => x.cover === 1).map(x => { return { name: x.name, url: x.url, cover: x.cover } })
+      return JSON.stringify(cover2.concat(cover1))
+    },
     async uploadImgByUrl() {
       const params = {
         url: 'image/url',
@@ -239,9 +249,6 @@ export default {
       this.imgList()
 
     },
-    haha() {
-      alert('哈哈');
-    },
     async imgList() {
       const params = {
         url: 'media/image/list',
@@ -252,8 +259,6 @@ export default {
       this.images = result
       console.log('看看result')
       console.log(result)
-
-
     },
     renderContent(h, { root, node, data }) {
       return h('span', {

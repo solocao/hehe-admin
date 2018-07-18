@@ -104,7 +104,11 @@ export default {
                   },
                   on: {
                     click: () => {
-                      this.show(params.index)
+                      const { _id } = params.row
+                      this.$router.push({
+                        path: '/product/edit',
+                        query: { product_id: _id }
+                      });
                     }
                   }
                 }, '编辑商品'),

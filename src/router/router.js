@@ -200,6 +200,13 @@ export const appRouter = [
                 name: 'product-category',
                 title: '品牌管理',
                 component: () => import('@/views/product/brand.vue')
+            },
+            {
+                path: 'edit',
+                icon: 'compose',
+                name: 'product-edit',
+                title: '编辑商品',
+                component: () => import('@/views/product/edit.vue')
             }
         ]
     },
