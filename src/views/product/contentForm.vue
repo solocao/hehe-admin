@@ -108,11 +108,13 @@ export default {
         },
         // 设置form表单信息
         setForm(form) {
-            const { name, category, content, count, create_at, img_list, keywords, official_price, sale_price, tag } = form
+            const { name, category, code, content, count, create_at, img_list, keywords, official_price, sale_price, tag } = form
             // 设置图片
             this.$refs.uploadCard.setImageList(img_list)
             // 商品名称
             this.form.name = name;
+            // 商品编码
+            this.form.code = code
             // 商品售卖价格
             this.form.sale_price = sale_price;
             // 商品介绍文本

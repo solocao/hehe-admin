@@ -268,6 +268,8 @@ export default {
         return false
       }
       const formData = this.$refs.form.getForm();
+      // 设置product_id
+      formData._id = this.$route.query.product_id
       const params = {
         url: '/product/update',
         payload: formData,
@@ -296,7 +298,6 @@ export default {
   beforeRouteEnter(to, from, next) {
     next((vm) => {
       vm.getProduct()
-
     });
   },
   computed: {
