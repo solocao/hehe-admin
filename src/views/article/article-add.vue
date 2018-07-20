@@ -4,26 +4,7 @@
         <Row>
             <Col span="18">
             <Card>
-                <Form :label-width="80">
-                    <FormItem label="文章标题" :error="articleError">
-                        <Input v-model="title" @on-blur="titleBlur" />
-                    </FormItem>
-                    <FormItem label="原文链接" :error="descriptionError">
-                        <Input v-model="description" @on-blur="descriptionBlur" />
-                    </FormItem>
-                    <FormItem label="关键字" :error="keyworError">
-                        <Input v-model="keyword" @on-blur="keywordBlur" />
-                    </FormItem>
-                    <FormItem label="文章描述" :error="descriptionError">
-                        <Input v-model="description" @on-blur="descriptionBlur" />
-                    </FormItem>
-                    <FormItem label="文章标签" :error="articleError">
-                        <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
-                    </FormItem>
-                </Form>
-                <div class="margin-top-20">
-                    <textarea id="articleEditor"></textarea>
-                </div>
+                <content-form ref="form"></content-form>
             </Card>
             </Col>
             <Col span="6" class="padding-left-10">
@@ -122,10 +103,13 @@
 </template>
 
 <script>
-import tinymce from 'tinymce';
+import contentForm from './contentForm.vue'
 
 export default {
     name: 'artical-publish',
+    components: {
+        contentForm
+    },
     data() {
         return {
             content: '<h2>I am Example</h2>',
@@ -158,7 +142,6 @@ export default {
             publishTimeType: 'immediately',
             editPublishTime: false, // 是否正在编辑发布时间
             articleTagSelected: [], // 文章选中的标签
-            articleTagList: [], // 所有标签列表
             classificationList: [],
             classificationSelected: [], // 在所有分类目录中选中的目录数组
             offenUsedClass: [],
@@ -170,9 +153,7 @@ export default {
         };
     },
     methods: {
-        avtiveTag(t) {
-            t.active = !t.active
-        },
+        // 获取分类列表树
         async categoryList() {
             const params = {
                 url: 'category/list',
@@ -193,60 +174,6 @@ export default {
             }
             nodeTree(data)
             this.classificationList = data
-        },
-        async tagList() {
-            const params = {
-                url: '/tag/list',
-                payload: {
-
-                }
-            }
-            const result = await this.post(params)
-            const data = result.data
-            data.forEach(x => {
-                x.active = false
-            })
-
-            this.tags = result.data
-
-        },
-
-        titleBlur() {
-            if (this.title.length !== 0) {
-                // this.articleError = '';
-                localStorage.title = this.title; // 本地存储文章标题
-                if (!this.articlePathHasEdited) {
-                    let date = new Date();
-                    let year = date.getFullYear();
-                    let month = date.getMonth() + 1;
-                    let day = date.getDate();
-                    this.fixedLink = window.location.host + '/' + year + '/' + month + '/' + day + '/';
-                    this.articlePath = this.title;
-                    this.articlePathHasEdited = true;
-                    this.showLink = true;
-                }
-            } else {
-                // this.articleError = '文章标题不可为空哦';
-                this.$Message.error('文章标题不可为空哦');
-            }
-        },
-        keywordBlur() {
-            if (this.keyword.length !== 0) {
-                // 本地存储文章关键字
-                localStorage.keyword = this.keyword;
-            } else {
-                // this.articleError = '文章标题不可为空哦';
-                this.$Message.error('关键字不可为空哦');
-            }
-        },
-        descriptionBlur() {
-            if (this.description.length !== 0) {
-                // 本地存储文章描述
-                localStorage.description = this.description;
-            } else {
-                // this.articleError = '文章标题不可为空哦';
-                this.$Message.error('文章描述不可为空哦');
-            }
         },
         editArticlePath() {
             this.editLink = !this.editLink;
@@ -290,40 +217,7 @@ export default {
         handleAddNewTag() {
             this.addingNewTag = !this.addingNewTag;
         },
-        createNewTag() {
-            if (this.newTagName.length !== 0) {
-                this.articleTagList.push({ value: this.newTagName });
-                this.addingNewTag = false;
-                setTimeout(() => {
-                    this.newTagName = '';
-                }, 200);
-            } else {
-                this.$Message.error('请输入标签名');
-            }
-        },
-        cancelCreateNewTag() {
-            this.newTagName = '';
-            this.addingNewTag = false;
-        },
-        // 允许发布之前的权限验证
-        canPublish() {
-            this.avtiveTags = this.tags.filter(x => x.active === true)
-            if (this.avtiveTags.length === 0) {
-                this.$Message.error('请选择文章标签');
-                return false
-            }
-            this.activeCatogories = this.$refs.categoryTree.getCheckedNodes()
-            if (this.activeCatogories.length === 0) {
-                this.$Message.error('请选择文章分类');
-                return false
-            }
-            if (this.title.length === 0) {
-                this.$Message.error('请输入文章标题');
-                return false;
-            } else {
-                return true;
-            }
-        },
+
         handlePreview() {
             if (this.canPublish()) {
                 if (this.publishTimeType === 'immediately') {
@@ -345,42 +239,34 @@ export default {
             }
         },
         handleSaveDraft() {
-            if (!this.canPublish()) {
-                //
-            }
+
         },
         async handlePublish() {
-            if (this.canPublish()) {
-                this.publishLoading = true;
-                console.log('看看结果')
-                console.log(this.avtiveTags.map(x => { return x._id }))
-                const params = {
-                    url: '/article/add',
-                    payload: {
-                        title: this.title,
-                        content: this.content,
-                        keyword: this.keyword,
-                        description: this.description,
-                        tag: JSON.stringify(this.avtiveTags.map(x => { return x._id })),
-                        category: JSON.stringify(this.activeCatogories.map(x => { return x._id }))
-                    },
-                    auth: true
-                }
-                const result = await this.post(params)
-                this.publishLoading = false;
-                if (result.code === 1) {
-                    this.$Notice.success({
-                        title: '发送成功',
-                        desc: '文章《' + this.title + '》保存成功',
-                        duration: 3
-                    });
-                } else {
-                    this.$Notice.success({
-                        title: '发送失败',
-                        desc: '请联系管理员',
-                        duration: 3
-                    });
-                }
+            if (!this.$refs.form.validForm) {
+                return false
+            }
+            const formData = this.$refs.form.getForm();
+            this.publishLoading = true;
+            const params = {
+                url: '/article/add',
+                payload: Object.assign({}, formData, {
+                    category: JSON.stringify(this.$refs.categoryTree.getCheckedNodes().map(x => { return x._id }))                }),
+                auth: true
+            }
+            const result = await this.post(params)
+            this.publishLoading = false;
+            if (result.code === 1) {
+                this.$Notice.success({
+                    title: '发送成功',
+                    desc: '文章《' + this.title + '》保存成功',
+                    duration: 3
+                });
+            } else {
+                this.$Notice.success({
+                    title: '发送失败',
+                    desc: '请联系管理员',
+                    duration: 3
+                });
             }
         },
         handleSelectTag() {
@@ -396,15 +282,6 @@ export default {
     },
     mounted() {
         this.categoryList()
-        this.tagList()
-        this.articleTagList = [
-            { value: 'vue' },
-            { value: 'iview' },
-            { value: 'ES6' },
-            { value: 'webpack' },
-            { value: 'babel' },
-            { value: 'eslint' }
-        ];
         this.classificationList = [
             {
                 title: 'Vue实例',
@@ -484,32 +361,9 @@ export default {
                 title: '缩写'
             }
         ];
-        tinymce.init({
-            selector: '#articleEditor',
-            branding: false,
-            elementpath: false,
-            height: 600,
-            language: 'zh_CN.GB2312',
-            menubar: 'edit insert view format table tools',
-            theme: 'modern',
-            plugins: [
-                'advlist autolink lists link image charmap print preview hr anchor pagebreak imagetools',
-                'searchreplace visualblocks visualchars code fullscreen fullpage',
-                'insertdatetime media nonbreaking save table contextmenu directionality',
-                'emoticons paste textcolor colorpicker textpattern imagetools codesample'
-            ],
-            toolbar1: ' newnote print fullscreen preview | undo redo | insert | styleselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image emoticons media codesample',
-            autosave_interval: '20s',
-            image_advtab: true,
-            table_default_styles: {
-                width: '100%',
-                borderCollapse: 'collapse'
-            }
-        });
+
     },
-    destroyed() {
-        tinymce.get('articleEditor').destroy();
-    }
+
 };
 </script>
 <style lang="stylus">
