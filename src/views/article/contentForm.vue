@@ -110,7 +110,6 @@ export default {
       let formCory = JSON.parse(JSON.stringify(this.form))
       const key = Object.keys(formCory).forEach(x => {
         if (formCory[x] === null || formCory[x] === '' || formCory[x] === [] || formCory[x] === '[]') {
-          console.log('闪闪')
           delete formCory[x]
         }
       })

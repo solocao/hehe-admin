@@ -143,6 +143,29 @@ export const appRouter = [
         ]
     },
     {
+        path: '/crawler',
+        icon: 'social-buffer',
+        name: 'crawler',
+        title: '爬虫管理',
+        component: Main,
+        children: [
+            {
+                path: 'index',
+                icon: 'compose',
+                name: 'crawler-item',
+                title: '站点列表',
+                component: () => import('@/views/crawler/index.vue')
+            },
+            {
+                path: 'upload1',
+                icon: 'compose',
+                name: 'crawler-item1',
+                title: '爬虫规则',
+                component: () => import('@/views/crawler/rule.vue')
+            },
+        ]
+    },
+    {
         path: '/comment',
         icon: 'social-buffer',
         name: 'comment',
