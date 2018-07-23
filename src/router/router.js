@@ -163,6 +163,13 @@ export const appRouter = [
                 title: '爬虫规则',
                 component: () => import('@/views/crawler/rule.vue')
             },
+            {
+                path: 'add',
+                icon: 'compose',
+                name: 'crawler-add',
+                title: '新增爬虫',
+                component: () => import('@/views/crawler/add.vue')
+            },
         ]
     },
     {

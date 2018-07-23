@@ -19,6 +19,7 @@
           <Icon type="android-contact"></Icon>
           网站分类
         </p>
+        <Button slot="extra" type="primary" @click="categoryModel='add'">新增分类</Button>
         <div>
           <Table :columns="categoryColumns" :data="categoryData"></Table>
         </div>
@@ -36,12 +37,35 @@
       </Card>
       </Col>
     </Row>
+    <Modal v-model="categoryModel" :title="categoryModel==='add'?'新增分类':'更新分类'" @on-ok="ok" @on-cancel="cancel">
+      <Form :model="cform" label-position="top">
+        <FormItem label="原网站分类">
+          <Input v-model="cform.origin_category"></Input>
+        </FormItem>
+        <FormItem label="原网站分类id">
+          <Input v-model="cform.origin_id"></Input>
+        </FormItem>
+        <FormItem label="本系统内对应分类">
+          <Input v-model="cform.target_category"></Input>
+        </FormItem>
+        <FormItem label="对应爬虫规则">
+          <Input v-model="cform.crule"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      cform: {
+        origin_category: '',
+        origin_id: '',
+        target_category: '',
+        crule: ''
+      },
+      categoryModel: false,
       siteColumns: [
         {
           title: '站点',
@@ -126,7 +150,12 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    const row = params.row
+                    const { origin_category, origin_id, target_category, _id, crule } = row
+                    this.cform.origin_category = origin_category;
+                    this.cform.origin_id = origin_id;
+                    this.cform.target_category = target_category;
+                    this.categoryModel = 'edit'
                   }
                 }
               }, '编辑')
@@ -142,6 +171,16 @@ export default {
     this.siteList()
   },
   methods: {
+    editCategory() {
+      if (this.categoryModel === 'add') {
+
+      }
+      if (this.categoryModel === 'edit') {
+
+      }
+    },
+    ok() { },
+    cancel() { },
     async siteList() {
       const params = {
         url: 'crawler/site/list',
@@ -162,6 +201,7 @@ export default {
         }
       }
       const result = await this.post(params)
+      this.$Message.info('分类获取成功')
       this.categoryData = result.data
       console.log(result)
 

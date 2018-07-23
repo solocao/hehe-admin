@@ -5,25 +5,39 @@
       <Card>
         <p slot="title">
           <Icon type="android-contact"></Icon>
-          爬取网站列表
+          新增爬虫
         </p>
-        <Button slot="extra" type="primary">点击上传</Button>
+        <Button slot="extra" type="primary" @click="addRule">确认保存</Button>
         <div>
-          <!-- <Table :columns="Columns" :data="Data"></Table> -->
+          <Form :model="form" label-position="left" :label-width="100">
+            <FormItem label="爬虫名称">
+              <Input v-model="form.name"></Input>
+            </FormItem>
+            <FormItem label="爬虫demo站点">
+              <Input v-model="form.site"></Input>
+            </FormItem>
+            <FormItem label="爬虫描述">
+              <Input v-model="form.description"></Input>
+            </FormItem>
+          </Form>
+          <div style="height:800px;width:100%">
+            <div style="width:100%;height:100%" ref="codeEditor"></div>
+          </div>
         </div>
       </Card>
       </Col>
-      <Col span="12">
+      <Col span="12" style="padding-left:10px">
       <Card>
         <p slot="title">
           <Icon type="android-contact"></Icon>
-          编辑器
+          爬虫结果
         </p>
-        <Button slot="extra" type="primary" @click="ruleTest">测试</Button>
-        <Input v-model="site" placeholder="Enter something..." style="width: 300px"></Input>
-        <div style="height:300px;width:100%">
-          <div style="width:100%;height:100%" ref="codeEditor"></div>
+        <Button slot="extra" type="primary" @click="ruleTest">爬虫测试</Button>
+        <div>
+          <Input v-model="result" type="textarea" :autosize="{minRows: 30,maxRows: 80}" placeholder="Enter something..."></Input>
+
         </div>
+
       </Card>
       </Col>
     </Row>
@@ -44,7 +58,15 @@ export default {
   data() {
     return {
       codeEditor: null,
-      site: null
+      site: null,
+      form: {
+        // 规则名称
+        name: '中国企业网爬虫',
+        site: 'http://www.qiye.gov.cn/news/qiye/gongs/23115.html',
+        description: '爬单页文章',
+        rule: ``
+      },
+      result: null
       // Columns: [],
       // Data: ''
 
@@ -60,9 +82,20 @@ export default {
       const params = {
         url: 'crawler/rule/test',
         payload: {
-          site: this.site,
+          site: this.form.site,
           rule: this.codeEditor.getValue()
         }
+      }
+      const result = await this.post(params)
+      this.result = jsBeautify.js_beautify(JSON.stringify(result), { indent_size: 2 });
+      console.log(result)
+    },
+    async addRule() {
+      this.form.rule = this.codeEditor.getValue()
+      const formCopy = this.form
+      const params = {
+        url: 'crawler/rule/add',
+        payload: formCopy
       }
       const result = await this.post(params)
       console.log(result)
