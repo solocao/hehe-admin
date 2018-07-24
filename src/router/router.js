@@ -157,17 +157,24 @@ export const appRouter = [
                 component: () => import('@/views/crawler/index.vue')
             },
             {
+                path: 'category',
+                icon: 'compose',
+                name: 'crawler-category',
+                title: '站点分类',
+                component: () => import('@/views/crawler/category.vue')
+            },
+            {
                 path: 'upload1',
                 icon: 'compose',
                 name: 'crawler-item1',
-                title: '爬虫规则',
+                title: '规则列表',
                 component: () => import('@/views/crawler/rule.vue')
             },
             {
                 path: 'add',
                 icon: 'compose',
                 name: 'crawler-add',
-                title: '新增爬虫',
+                title: '规则详情',
                 component: () => import('@/views/crawler/add.vue')
             },
         ]

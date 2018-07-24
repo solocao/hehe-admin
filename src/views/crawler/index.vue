@@ -7,7 +7,7 @@
           <Icon type="android-contact"></Icon>
           爬取网站列表
         </p>
-        <Button slot="extra" type="primary">点击上传</Button>
+        <Button slot="extra" size="small" type="primary">新增站点</Button>
         <div>
           <Table :columns="siteColumns" :data="siteData"></Table>
         </div>
@@ -19,7 +19,7 @@
           <Icon type="android-contact"></Icon>
           网站分类
         </p>
-        <Button slot="extra" type="primary" @click="categoryModel='add'">新增分类</Button>
+        <Button slot="extra" size="small" type="primary" @click="categoryMode='add';categoryModel=true">新增分类</Button>
         <div>
           <Table :columns="categoryColumns" :data="categoryData"></Table>
         </div>
@@ -37,7 +37,7 @@
       </Card>
       </Col>
     </Row>
-    <Modal v-model="categoryModel" :title="categoryModel==='add'?'新增分类':'更新分类'" @on-ok="ok" @on-cancel="cancel">
+    <Modal v-model="categoryModel" :title="categoryMode==='add'?'新增分类':'更新分类'" @on-ok="editCategory" @on-cancel="cancel">
       <Form :model="cform" label-position="top">
         <FormItem label="原网站分类">
           <Input v-model="cform.origin_category"></Input>
@@ -59,13 +59,9 @@
 export default {
   data() {
     return {
-      cform: {
-        origin_category: '',
-        origin_id: '',
-        target_category: '',
-        crule: ''
-      },
+
       categoryModel: false,
+      categoryMode: null,
       siteColumns: [
         {
           title: '站点',
@@ -74,6 +70,7 @@ export default {
         {
           title: '操作',
           key: 'age',
+          width: 130,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -89,18 +86,18 @@ export default {
                     this.categoryList(params.row._id)
                   }
                 }
-              }, '爬虫分类'),
+              }, '分类'),
               h('Button', {
                 props: {
-                  type: 'error',
+                  type: 'ghost',
                   size: 'small'
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+
                   }
                 }
-              }, '编辑一下')
+              }, '编辑')
             ]);
           }
         },
@@ -127,6 +124,7 @@ export default {
         {
           title: '操作',
           key: 'age',
+          width: 130,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -145,17 +143,19 @@ export default {
               }, '详情'),
               h('Button', {
                 props: {
-                  type: 'error',
+                  type: 'ghost',
                   size: 'small'
                 },
                 on: {
                   click: () => {
                     const row = params.row
                     const { origin_category, origin_id, target_category, _id, crule } = row
+                    this.cform.site_category_id = _id;
                     this.cform.origin_category = origin_category;
                     this.cform.origin_id = origin_id;
                     this.cform.target_category = target_category;
-                    this.categoryModel = 'edit'
+                    this.categoryModel = true
+                    this.categoryMode = 'edit'
                   }
                 }
               }, '编辑')
@@ -167,18 +167,14 @@ export default {
       categoryData: []
     };
   },
+  computed: {
+
+  },
   mounted() {
     this.siteList()
   },
   methods: {
-    editCategory() {
-      if (this.categoryModel === 'add') {
 
-      }
-      if (this.categoryModel === 'edit') {
-
-      }
-    },
     ok() { },
     cancel() { },
     async siteList() {

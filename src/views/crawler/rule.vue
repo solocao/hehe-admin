@@ -1,28 +1,15 @@
 <template>
   <div>
     <Row>
-      <Col span="12">
+      <Col span="24">
       <Card>
         <p slot="title">
           <Icon type="android-contact"></Icon>
           爬取网站列表
         </p>
-        <Button slot="extra" type="primary">点击上传</Button>
+        <Button slot="extra" type="primary">新增规则</Button>
         <div>
-          <!-- <Table :columns="Columns" :data="Data"></Table> -->
-        </div>
-      </Card>
-      </Col>
-      <Col span="12">
-      <Card>
-        <p slot="title">
-          <Icon type="android-contact"></Icon>
-          编辑器
-        </p>
-        <Button slot="extra" type="primary" @click="ruleTest">测试</Button>
-        <Input v-model="site" placeholder="Enter something..." style="width: 300px"></Input>
-        <div style="height:300px;width:100%">
-          <div style="width:100%;height:100%" ref="codeEditor"></div>
+          <Table :columns="columns" :data="data"></Table>
         </div>
       </Card>
       </Col>
@@ -44,9 +31,68 @@ export default {
   data() {
     return {
       codeEditor: null,
-      site: null
-      // Columns: [],
-      // Data: ''
+      site: null,
+      columns: [
+        {
+          title: 'ID',
+          key: '_id'
+        },
+        {
+          title: '名称',
+          key: 'name'
+        },
+        {
+          title: '描述',
+          key: 'description'
+        },
+        {
+          title: '站点',
+          key: 'site'
+        },
+        {
+          title: '操作',
+          key: 'site',
+          width: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    const { _id } = params.row
+                    this.$router.push({
+                      path: '/crawler/add',
+                      query: { rule_id: _id }
+                    });
+                  }
+                }
+              }, '查看规则'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    const { _id } = params.row
+                    this.ruleDelete(_id)
+                  }
+                }
+              }, '删除规则')
+            ]);
+          }
+        },
+      ],
+      data: []
 
     };
   },
@@ -55,6 +101,20 @@ export default {
       const context = this.codeEditor.getValue();
       let code = jsBeautify.js_beautify(context, { indent_size: 2 });
       this.codeEditor.setValue(code);
+    },
+    // 获取爬虫规则
+    async ruleList() {
+      const params = {
+        url: '/crawler/rule/list',
+        payload: {
+
+        }
+      }
+      const result = await this.get(params)
+      if (result.code == 1) {
+        this.data = result.data
+      }
+      console.log(result)
     },
     async ruleTest() {
       const params = {
@@ -65,7 +125,23 @@ export default {
         }
       }
       const result = await this.post(params)
-      console.log(result)
+      this.data = result.data
+      // if (result.code == 1) {
+      //   this.data = result.data
+      //   alert('赋值')
+      // }
+    },
+    async ruleDelete(rule_id) {
+      const params = {
+        url: 'crawler/rule/delete',
+        payload: {
+          rule_id: rule_id,
+        }
+      }
+      const result = await this.post(params)
+      if (result.code === 1) {
+        this.$Message.info('爬虫删除完成');
+      }
     }
   },
   mounted() {
@@ -81,6 +157,8 @@ export default {
         this.format();
       }
     });
+
+    this.ruleList()
   }
 
 };
