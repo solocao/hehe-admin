@@ -97,6 +97,10 @@ export default {
         url: 'crawler/rule/item/' + rule_id,
       }
       const result = await this.get(params)
+      const { name, site, description } = result.data;
+      this.form.name = name;
+      this.form.site = site;
+      this.form.description = description;
       let code = jsBeautify.js_beautify(result.data.rule, { indent_size: 2 });
       this.codeEditor.setValue(code);
     },

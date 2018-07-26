@@ -164,6 +164,13 @@ export const appRouter = [
                 component: () => import('@/views/crawler/category.vue')
             },
             {
+                path: 'record',
+                icon: 'compose',
+                name: 'crawler-record',
+                title: '爬虫记录',
+                component: () => import('@/views/crawler/record.vue')
+            },
+            {
                 path: 'upload1',
                 icon: 'compose',
                 name: 'crawler-item1',

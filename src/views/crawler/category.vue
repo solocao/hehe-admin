@@ -1,7 +1,19 @@
 <template>
   <div class="crawler-category">
     <Row>
-      <Col span="24">
+      <Col span="12">
+      <Card>
+        <p slot="title">
+          <Icon type="android-contact"></Icon>
+          中国企业网 爬虫分类
+        </p>
+        <Button slot="extra" size="small" type="primary">新增分类</Button>
+        <div>
+          <Table :columns="categoryColumns" :data="categoryData"></Table>
+        </div>
+      </Card>
+      </Col>
+      <Col span="12" style="padding-left:10px">
       <Card>
         <p slot="title">
           <Icon type="android-contact"></Icon>
@@ -57,13 +69,18 @@ export default {
           title: '分类',
           key: 'origin_category'
         },
+
         {
-          title: '列表规则',
-          key: 'list_rule'
-        },
-        {
-          title: '详情规则',
-          key: 'detail_rule'
+          title: '规则列表',
+          key: 'asdf',
+          render: (h, params) => {
+            const { list_rule, detail_rule } = params.row
+            return h('div', [
+              h('div', list_rule),
+              h('div', detail_rule)
+            ]);
+          }
+
         },
         {
           title: '操作',
@@ -93,13 +110,16 @@ export default {
                 on: {
                   click: () => {
                     const row = params.row
-                    const { origin_category, origin_id, target_category, _id, crule } = row
+                    console.log()
+                    const { origin_category, origin_id, target_category, _id, crule, list_rule, detail_rule } = row
                     this.cform.site_category_id = _id;
                     this.cform.origin_category = origin_category;
                     this.cform.origin_id = origin_id;
                     this.cform.target_category = target_category;
-                    this.categoryModel = true
-                    this.categoryMode = 'edit'
+                    this.cform.list_rule = list_rule;
+                    this.cform.detail_rule = detail_rule;
+                    this.categoryModel = true;
+                    this.categoryMode = 'edit';
                   }
                 }
               }, '编辑')
@@ -128,6 +148,7 @@ export default {
           payload: cformCopy
         }
         const result = await this.post(params)
+        this.categoryList('5b5424ef8b4ee5a918ac2412')
       }
     },
     async categoryList(site_id) {

@@ -1,55 +1,33 @@
 <template>
   <div>
     <Row>
-      <Col span="8">
+      <Col span="24">
       <Card>
         <p slot="title">
           <Icon type="android-contact"></Icon>
           爬取网站列表
         </p>
-        <Button slot="extra" size="small" type="primary">新增站点</Button>
+        <div slot="extra">
+          <Button size="small" type="ghost" @click="siteModeAdd">新增</Button>
+          <Button size="small" type="ghost" @click="siteList">刷新</Button>
+        </div>
+
         <div>
           <Table :columns="siteColumns" :data="siteData"></Table>
         </div>
       </Card>
       </Col>
-      <Col span="8" style="padding-left:10px">
-      <Card>
-        <p slot="title">
-          <Icon type="android-contact"></Icon>
-          网站分类
-        </p>
-        <Button slot="extra" size="small" type="primary" @click="categoryMode='add';categoryModel=true">新增分类</Button>
-        <div>
-          <Table :columns="categoryColumns" :data="categoryData"></Table>
-        </div>
-      </Card>
-      </Col>
-      <Col span="8" style="padding-left:10px">
-      <Card>
-        <p slot="title">
-          <Icon type="android-contact"></Icon>
-          进度
-        </p>
-        <div>
-
-        </div>
-      </Card>
-      </Col>
     </Row>
-    <Modal v-model="categoryModel" :title="categoryMode==='add'?'新增分类':'更新分类'" @on-ok="editCategory" @on-cancel="cancel">
-      <Form :model="cform" label-position="top">
-        <FormItem label="原网站分类">
-          <Input v-model="cform.origin_category"></Input>
+    <Modal v-model="siteModal" :title="siteMode==='add'?'新增站点':'更新站点'" @on-ok="ok" @on-cancel="cancel">
+      <Form :model="form" label-position="left" :label-width="100">
+        <FormItem label="网站名称">
+          <Input v-model="form.name"></Input>
         </FormItem>
-        <FormItem label="原网站分类id">
-          <Input v-model="cform.origin_id"></Input>
+        <FormItem label="网站地址">
+          <Input v-model="form.site"></Input>
         </FormItem>
-        <FormItem label="本系统内对应分类">
-          <Input v-model="cform.target_category"></Input>
-        </FormItem>
-        <FormItem label="对应爬虫规则">
-          <Input v-model="cform.crule"></Input>
+        <FormItem label="网站描述">
+          <Input v-model="form.description"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -59,7 +37,15 @@
 export default {
   data() {
     return {
-
+      // 网站编辑的模态框
+      siteModal: false,
+      // 模态框当前的状态
+      siteMode: false,
+      form: {
+        name: null,
+        site: null,
+        description: null
+      },
       categoryModel: false,
       categoryMode: null,
       siteColumns: [
@@ -115,56 +101,7 @@ export default {
           age: 24,
           address: 'London No. 1 Lake Park',
           date: '2016-10-01'
-        }],
-      categoryColumns: [
-        {
-          title: '分类',
-          key: 'origin_category'
-        },
-        {
-          title: '操作',
-          key: 'age',
-          width: 130,
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.show(params.index)
-                  }
-                }
-              }, '详情'),
-              h('Button', {
-                props: {
-                  type: 'ghost',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    const row = params.row
-                    const { origin_category, origin_id, target_category, _id, crule } = row
-                    this.cform.site_category_id = _id;
-                    this.cform.origin_category = origin_category;
-                    this.cform.origin_id = origin_id;
-                    this.cform.target_category = target_category;
-                    this.categoryModel = true
-                    this.categoryMode = 'edit'
-                  }
-                }
-              }, '编辑')
-            ]);
-          }
-        },
-
-      ],
-      categoryData: []
+        }]
     };
   },
   computed: {
@@ -174,8 +111,43 @@ export default {
     this.siteList()
   },
   methods: {
+    // 新增
+    siteModeAdd() {
+      this.siteModal = true;
+      this.siteMode = 'add'
+    },
+    // 更新
+    siteModeUpdate() {
+      this.siteModal = true;
+      this.siteMode = 'update'
 
-    ok() { },
+    },
+    async ok() {
+      if (this.siteMode === 'add') {
+        const params = {
+          url: 'crawler/site/add',
+          payload: this.form,
+          auth: true
+        }
+
+        const result = await this.post(params)
+        if (result.code === 1) {
+          this.siteList()
+        }
+
+      }
+      if (this.siteMode === 'update') {
+        const params = {
+          url: 'crawler/site/update',
+          payload: this.form
+        }
+        const result = await this.post(params)
+        if (result.code === 1) {
+          this.siteList()
+        }
+
+      }
+    },
     cancel() { },
     async siteList() {
       const params = {
@@ -186,8 +158,6 @@ export default {
       }
       const result = await this.get(params)
       this.siteData = result.data
-      console.log('看看站点')
-      console.log(result)
     },
     async categoryList(site_id) {
       const params = {

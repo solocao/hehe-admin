@@ -140,6 +140,7 @@ export default {
       }
       const result = await this.post(params)
       if (result.code === 1) {
+        this.ruleList();
         this.$Message.info('爬虫删除完成');
       }
     }
