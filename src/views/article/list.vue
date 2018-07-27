@@ -37,7 +37,17 @@ export default {
                     title: '评论',
                     key: 'comment',
                     render: (h, params) => {
-                        return <div id="foo">bar</div>
+                        return (<div>
+                            asfa
+                            <dropdown>
+                                <i-button size="small">操作</i-button>
+                                <dropdown-menu slot="list">
+                                    <dropdown-item><icon type="ios-copy"></icon>数据下载</dropdown-item>
+                                    <dropdown-item><icon type="ios-download"></icon>视频下载</dropdown-item>
+                                    <dropdown-item><icon type="trash-b"></icon>关闭任务</dropdown-item>
+                                </dropdown-menu>
+                            </dropdown>
+                        </div >)
                     }
                 },
                 {
@@ -122,49 +132,64 @@ export default {
                     title: '操作',
                     key: 'state',
                     render: (h, params) => {
-                        return h('div', {
-                            style: {
-                                display: 'flex',
-                                flexDirection: 'column'
-                            }
-                        },
-                            [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '1px'
-
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.show(params.index)
-                                        }
-                                    }
-                                }, '查看文章'),
-                                h('Dropdown', {
-                                    props: {
-                                        transfer: true
-                                    }
-                                }, [
-                                        h('Button', {
-                                            props: {
-                                                type: 'ghost',
-                                                size: 'small'
-                                            }
-                                        }, '更多操作'),
-                                        h('DropdownMenu', {
-                                            slot: 'list'
-                                        }, [
-                                                h('DropdownItem', '查看文章'),
-                                                h('DropdownItem', '删除文章'),
-                                                h('DropdownItem', '详情')
-                                            ])
-                                    ])
-                            ]);
+                        return (<div>
+                            <i-button size="small" title='查看'>编辑文章</i-button>
+                            <dropdown>
+                                <i-button size="small">更多操作</i-button>
+                                <dropdown-menu slot="list">
+                                    <dropdown-item><icon type="ios-copy"></icon>查看文章</dropdown-item>
+                                    <dropdown-item><icon type="ios-download"></icon>删除文章</dropdown-item>
+                                    <dropdown-item><icon type="trash-b"></icon>修改标签</dropdown-item>
+                                </dropdown-menu>
+                            </dropdown>
+                        </div >)
                     }
+                    // render: (h, params) => {
+
+
+                    //     return h('div', {
+                    //         style: {
+                    //             display: 'flex',
+                    //             flexDirection: 'column'
+                    //         }
+                    //     },
+                    //         [
+                    //             h('Button', {
+                    //                 props: {
+                    //                     type: 'primary',
+                    //                     size: 'small'
+                    //                 },
+                    //                 style: {
+                    //                     margin: '1px'
+
+                    //                 },
+                    //                 on: {
+                    //                     click: () => {
+                    //                         this.show(params.index)
+                    //                     }
+                    //                 }
+                    //             }, '查看文章'),
+                    //             h('Dropdown', {
+                    //                 props: {
+                    //                     transfer: true
+                    //                 }
+                    //             }, [
+                    //                     h('Button', {
+                    //                         props: {
+                    //                             type: 'ghost',
+                    //                             size: 'small'
+                    //                         }
+                    //                     }, '更多操作'),
+                    //                     h('DropdownMenu', {
+                    //                         slot: 'list'
+                    //                     }, [
+                    //                             h('DropdownItem', '查看文章'),
+                    //                             h('DropdownItem', '删除文章'),
+                    //                             h('DropdownItem', '详情')
+                    //                         ])
+                    //                 ])
+                    //         ]);
+                    // }
                 }
             ]
         };
