@@ -113,6 +113,13 @@ export const appRouter = [
                 component: () => import('@/views/utils/uploadCard.vue')
             },
             {
+                path: 'list',
+                icon: 'pound',
+                name: 'article-list',
+                title: '所有文章',
+                component: () => import('@/views/article/list.vue')
+            },
+            {
                 path: 'add',
                 icon: 'compose',
                 name: 'text-editor',
@@ -120,11 +127,12 @@ export const appRouter = [
                 component: () => import('@/views/article/article-add.vue')
             },
             {
-                path: 'list',
-                icon: 'pound',
-                name: 'article-list',
-                title: '所有文章',
-                component: () => import('@/views/article/list.vue')
+                path: 'edit',
+                icon: 'compose',
+                name: 'article-edit',
+                title: '编辑文章',
+                display: false,
+                component: () => import('@/views/article/article-add.vue')
             },
             {
                 path: 'tag',

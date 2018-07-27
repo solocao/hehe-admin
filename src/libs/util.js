@@ -2,10 +2,17 @@ import axios from 'axios';
 import env from '../../build/env';
 import semver from 'semver';
 import packjson from '../../package.json';
+const moment = require('moment');
 
 let util = {
 
 };
+
+// 标准时间转化
+util.timeS = function (time) {
+    return moment(time).format('YYYY-MM-DD HH:mm:ss');
+};
+
 util.title = function (title) {
     title = title || 'iView admin';
     window.document.title = title;

@@ -1,21 +1,22 @@
 <template>
-    <div style="background:white">
-        <article-title></article-title>
-        <div style="marginBottom:4px;marginTop:4px">
-            <ButtonGroup>
-                <!-- <article-title></article-title> -->
-
+    <div class="article-list">
+        <div class="header-btn">
+            <ButtonGroup class="btn-item">
                 <Button size='small'>全部</Button>
                 <Button size='small' type="primary">已发布</Button>
-                <Button size='small'>全部</Button>
-                <Button size='small'>全部</Button>
+                <Button size='small'>草稿</Button>
+                <Button size='small'>爬虫</Button>
             </ButtonGroup>
-            <ButtonGroup>
+            <ButtonGroup class="btn-item">
                 <Button size='small'>刷新</Button>
                 <Button size='small' type="primary">清空搜索条件</Button>
                 <Button size='small'>全部</Button>
                 <Button size='small'>批量操作</Button>
             </ButtonGroup>
+            <div class="search-item">
+                <Input v-model="value" size="small" placeholder="Enter something..." style="width: 300px"></Input>
+                <Button size='small'>搜索</Button>
+            </div>
         </div>
 
         <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
@@ -24,105 +25,29 @@
 </template>
 <script>
 import articleTitle from './articleTitle.vue'
+import util from '../../libs/util.js'
+import Title from './Title.vue'
 export default {
-    components: {
-        articleTitle
-    },
     data() {
         return {
             tableData1: this.mockTableData1(),
             imageName: '',
             tableColumns1: [
                 {
-                    title: '评论',
-                    key: 'comment',
-                    render: (h, params) => {
-                        return (<div>
-                            asfa
-                            <dropdown>
-                                <i-button size="small">操作</i-button>
-                                <dropdown-menu slot="list">
-                                    <dropdown-item><icon type="ios-copy"></icon>数据下载</dropdown-item>
-                                    <dropdown-item><icon type="ios-download"></icon>视频下载</dropdown-item>
-                                    <dropdown-item><icon type="trash-b"></icon>关闭任务</dropdown-item>
-                                </dropdown-menu>
-                            </dropdown>
-                        </div >)
-                    }
-                },
-                {
                     title: '文章',
                     key: 'title',
-                    width: 200,
+                    width: 420,
                     render: (h, params) => {
                         const row = params.row;
-                        console.log(row.title)
-                        const text = row.title
-                        return h('div', {
-                            style: {
-                                padding: '4px',
-                                height: '60px',
-                                width: '500px',
-                                backgroundSize: 'cover'
-                            }
-                        }, [h('img', {
-                            domProps: {
-                                src: 'http://www.qiye.gov.cn/e/data/images/notimg.gif'
-                            },
-                            style: {
-                                width: '64px',
-                                height: '48px'
-                            }
-                        }), text]);
+                        return (<Title data={row} />)
                     }
-                },
-                {
-                    title: '分类目录',
-                    key: 'category'
-                },
-                {
-                    title: '标签',
-                    key: 'portrayal',
-                    render: (h, params) => {
-                        return h('Poptip', {
-                            props: {
-                                trigger: 'hover',
-                                title: params.row.portrayal.length + '个画像',
-                                placement: 'bottom'
-                            }
-                        }, [
-                                h('Tag', params.row.portrayal.length),
-                                h('div', {
-                                    slot: 'content'
-                                }, [
-                                        h('ul', this.tableData1[params.index].portrayal.map(item => {
-                                            return h('li', {
-                                                style: {
-                                                    textAlign: 'center',
-                                                    padding: '4px'
-                                                }
-                                            }, item);
-                                        }))
-                                    ])
-                            ]);
-                    }
-                },
-                {
-                    title: '标签',
-                    key: 'tag',
-
-                },
-                {
-                    title: '评论',
-                    key: 'comment',
-                },
-                {
-                    title: '喜欢',
-                    key: 'update'
                 },
                 {
                     title: '日期',
-                    key: 'create_at'
+                    key: 'create_at',
+                    render: (h, params) => {
+                        return h('span', util.timeS(params.row.create_at))
+                    }
                 },
                 {
                     title: '状态',
@@ -131,70 +56,33 @@ export default {
                 {
                     title: '操作',
                     key: 'state',
+                    width: 140,
                     render: (h, params) => {
                         return (<div>
-                            <i-button size="small" title='查看'>编辑文章</i-button>
+                            <i-button size="small" title='查看' style="margin-bottom:3px" onClick={this.openEdit}>编辑文章</i-button>
                             <dropdown>
                                 <i-button size="small">更多操作</i-button>
                                 <dropdown-menu slot="list">
-                                    <dropdown-item><icon type="ios-copy"></icon>查看文章</dropdown-item>
+                                    <dropdown-item><icon type="ios-copy"></icon>预x w览文章</dropdown-item>
                                     <dropdown-item><icon type="ios-download"></icon>删除文章</dropdown-item>
                                     <dropdown-item><icon type="trash-b"></icon>修改标签</dropdown-item>
                                 </dropdown-menu>
                             </dropdown>
                         </div >)
                     }
-                    // render: (h, params) => {
-
-
-                    //     return h('div', {
-                    //         style: {
-                    //             display: 'flex',
-                    //             flexDirection: 'column'
-                    //         }
-                    //     },
-                    //         [
-                    //             h('Button', {
-                    //                 props: {
-                    //                     type: 'primary',
-                    //                     size: 'small'
-                    //                 },
-                    //                 style: {
-                    //                     margin: '1px'
-
-                    //                 },
-                    //                 on: {
-                    //                     click: () => {
-                    //                         this.show(params.index)
-                    //                     }
-                    //                 }
-                    //             }, '查看文章'),
-                    //             h('Dropdown', {
-                    //                 props: {
-                    //                     transfer: true
-                    //                 }
-                    //             }, [
-                    //                     h('Button', {
-                    //                         props: {
-                    //                             type: 'ghost',
-                    //                             size: 'small'
-                    //                         }
-                    //                     }, '更多操作'),
-                    //                     h('DropdownMenu', {
-                    //                         slot: 'list'
-                    //                     }, [
-                    //                             h('DropdownItem', '查看文章'),
-                    //                             h('DropdownItem', '删除文章'),
-                    //                             h('DropdownItem', '详情')
-                    //                         ])
-                    //                 ])
-                    //         ]);
-                    // }
                 }
             ]
         };
     },
     methods: {
+        openEdit() {
+            this.$router.push({
+                path: 'edit',
+                query: {
+                    article_id: '2wrqr'
+                }
+            })
+        },
         mockTableData1() {
             let data = [];
             for (let i = 0; i < 10; i++) {
@@ -259,3 +147,27 @@ export default {
 };
 </script>
 
+<style lang="less">
+.article-list {
+  background: white;
+
+  .header-btn {
+    margin-bottom: 4px;
+    margin-top: 4px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-left: 6px;
+    width: 100%;
+    position: relative;
+
+    .btn-item {
+      margin-right: 6px;
+    }
+    .search-item {
+      position: absolute;
+      right: 4px;
+    }
+  }
+}
+</style>

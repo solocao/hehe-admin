@@ -37,6 +37,7 @@
     "js-beautify": "^1.7.5",
     "js-cookie": "^2.2.0",
     "lowdb": "^1.0.0",
+    "moment": "^2.22.2",
     "rasterizehtml": "^1.2.4",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.7.0",

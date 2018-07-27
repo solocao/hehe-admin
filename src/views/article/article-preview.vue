@@ -1,7 +1,4 @@
-<style lang="stylus">
-@import '../../styles/common.styl';
-@import './article-preview.styl';
-</style>
+
 
 <template>
   <div class="preview-main">
@@ -107,3 +104,8 @@ export default {
     }
 };
 </script>
+<style lang="stylus">
+
+@import '../../styles/common.styl';
+@import './article-preview.styl';
+</style>
