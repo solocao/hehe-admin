@@ -1,7 +1,10 @@
 <template>
     <div style="background:white">
+        <article-title></article-title>
         <div style="marginBottom:4px;marginTop:4px">
             <ButtonGroup>
+                <!-- <article-title></article-title> -->
+
                 <Button size='small'>全部</Button>
                 <Button size='small' type="primary">已发布</Button>
                 <Button size='small'>全部</Button>
@@ -20,12 +23,23 @@
     </div>
 </template>
 <script>
+import articleTitle from './articleTitle.vue'
 export default {
+    components: {
+        articleTitle
+    },
     data() {
         return {
             tableData1: this.mockTableData1(),
             imageName: '',
             tableColumns1: [
+                {
+                    title: '评论',
+                    key: 'comment',
+                    render: (h, params) => {
+                        return <div id="foo">bar</div>
+                    }
+                },
                 {
                     title: '文章',
                     key: 'title',
@@ -36,14 +50,20 @@ export default {
                         const text = row.title
                         return h('div', {
                             style: {
-                                textAlign: 'center',
                                 padding: '4px',
-                                height: '120px',
-                                width: '200px',
-                                background: 'url(http://mongoosejs.com/docs/images/mongoose5_62x30_transparent.png)',
+                                height: '60px',
+                                width: '500px',
                                 backgroundSize: 'cover'
                             }
-                        }, text);
+                        }, [h('img', {
+                            domProps: {
+                                src: 'http://www.qiye.gov.cn/e/data/images/notimg.gif'
+                            },
+                            style: {
+                                width: '64px',
+                                height: '48px'
+                            }
+                        }), text]);
                     }
                 },
                 {
@@ -123,49 +143,26 @@ export default {
                                             this.show(params.index)
                                         }
                                     }
-                                }, '编辑文章'),
-                                h('Button', {
+                                }, '查看文章'),
+                                h('Dropdown', {
                                     props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '1px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.show(params.index)
-                                        }
+                                        transfer: true
                                     }
-                                }, '移到草稿'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '1px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, '移回收站'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        margin: '1px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.openPreview(params.row._id)
-                                        }
-                                    }
-                                }, '查看文章')
+                                }, [
+                                        h('Button', {
+                                            props: {
+                                                type: 'ghost',
+                                                size: 'small'
+                                            }
+                                        }, '更多操作'),
+                                        h('DropdownMenu', {
+                                            slot: 'list'
+                                        }, [
+                                                h('DropdownItem', '查看文章'),
+                                                h('DropdownItem', '删除文章'),
+                                                h('DropdownItem', '详情')
+                                            ])
+                                    ])
                             ]);
                     }
                 }

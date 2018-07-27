@@ -1,50 +1,38 @@
 <template>
   <div class="crawler-category">
     <Row>
-      <Col span="12">
+      <Col span="24">
       <Card>
         <p slot="title">
           <Icon type="android-contact"></Icon>
           中国企业网 爬虫分类
         </p>
-        <Button slot="extra" size="small" type="primary">新增分类</Button>
-        <div>
-          <Table :columns="categoryColumns" :data="categoryData"></Table>
+        <div slot="extra">
+          <Button size="small" type="ghost" @click="categoryAdd">新增</Button>
+          <Button size="small" type="ghost" @click="categoryList">刷新</Button>
         </div>
-      </Card>
-      </Col>
-      <Col span="12" style="padding-left:10px">
-      <Card>
-        <p slot="title">
-          <Icon type="android-contact"></Icon>
-          中国企业网 爬虫分类
-        </p>
-        <Button slot="extra" size="small" type="primary">新增分类</Button>
         <div>
           <Table :columns="categoryColumns" :data="categoryData"></Table>
         </div>
       </Card>
       </Col>
     </Row>
-    <Modal v-model="categoryModel" :title="categoryMode==='add'?'新增分类':'更新分类'" @on-ok="editCategory" @on-cancel="cancel">
-      <Form :model="cform" label-position="left" :label-width="100">
+    <Modal v-model="categoryModal" :title="categoryMode==='add'?'新增分类':'更新分类'" @on-ok="ok" @on-cancel="cancel">
+      <Form :model="form" label-position="left" :label-width="100">
         <FormItem label="网站分类">
-          <Input v-model="cform.origin_category"></Input>
+          <Input v-model="form.origin_category"></Input>
         </FormItem>
         <FormItem label="网站地址">
-          <Input v-model="cform.url"></Input>
-        </FormItem>
-        <FormItem label="网站分类ID">
-          <Input v-model="cform.origin_id"></Input>
+          <Input v-model="form.url"></Input>
         </FormItem>
         <FormItem label="系统内分类">
-          <Input v-model="cform.target_category"></Input>
+          <Input v-model="form.target_category"></Input>
         </FormItem>
         <FormItem label="爬列表规则">
-          <Input v-model="cform.list_rule"></Input>
+          <Input v-model="form.list_rule"></Input>
         </FormItem>
         <FormItem label="爬详情规则">
-          <Input v-model="cform.detail_rule"></Input>
+          <Input v-model="form.detail_rule"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -54,12 +42,16 @@
 export default {
   data() {
     return {
-      categoryModel: false,
+      categoryModal: false,
       categoryMode: null,
-      cform: {
-        site_category_id: '5b5424ef8b4ee5a918ac2412',
+      form: {
+        // 站点id
+        site_id: null,
+        // 站点分类名称
         origin_category: null,
-        origin_id: null,
+        // 此站点的网址
+        url: null,
+        // 本系统目标分类
         target_category: null,
         list_rule: null,
         detail_rule: null
@@ -68,6 +60,10 @@ export default {
         {
           title: '分类',
           key: 'origin_category'
+        },
+        {
+          title: '日期',
+          key: 'create_at'
         },
 
         {
@@ -109,17 +105,8 @@ export default {
                 },
                 on: {
                   click: () => {
-                    const row = params.row
-                    console.log()
-                    const { origin_category, origin_id, target_category, _id, crule, list_rule, detail_rule } = row
-                    this.cform.site_category_id = _id;
-                    this.cform.origin_category = origin_category;
-                    this.cform.origin_id = origin_id;
-                    this.cform.target_category = target_category;
-                    this.cform.list_rule = list_rule;
-                    this.cform.detail_rule = detail_rule;
-                    this.categoryModel = true;
-                    this.categoryMode = 'edit';
+                    this.categoryUpdate(params.row)
+
                   }
                 }
               }, '编辑')
@@ -133,25 +120,52 @@ export default {
     };
   },
   methods: {
-    async editCategory() {
+    categoryAdd() {
+      this.categoryModal = true;
+      this.categoryMode = 'add';
+    },
+    categoryUpdate(row) {
+      const { origin_category, origin_id, target_category, _id, crule, list_rule, detail_rule, url } = row
+      this.form.url = url;
+      this.form.category_id = _id;
+      this.form.origin_category = origin_category;
+      this.form.target_category = target_category;
+      this.form.list_rule = list_rule;
+      this.form.detail_rule = detail_rule;
+      this.categoryModal = true;
+      this.categoryMode = 'update';
+    },
+    async ok() {
       if (this.categoryMode === 'add') {
-
+        const formCopy = this.form;
+        Object.keys(formCopy).map(x => {
+          if (formCopy[x] === null)
+            delete formCopy[x]
+        })
+        const params = {
+          url: 'crawler/site/category/add',
+          payload: formCopy,
+          auth: true
+        }
+        const result = await this.post(params)
+        alert(result)
       }
-      if (this.categoryMode === 'edit') {
-        const cformCopy = JSON.parse(JSON.stringify(this.cform))
-        Object.keys(cformCopy).map(x => {
-          if (cformCopy[x] === null)
-            delete cformCopy[x]
+      if (this.categoryMode === 'update') {
+        const formCopy = JSON.parse(JSON.stringify(this.form))
+        Object.keys(formCopy).map(x => {
+          if (formCopy[x] === null)
+            delete formCopy[x]
         })
         const params = {
           url: '/crawler/site/category/update',
-          payload: cformCopy
+          payload: formCopy
         }
         const result = await this.post(params)
-        this.categoryList('5b5424ef8b4ee5a918ac2412')
+        this.categoryList()
       }
     },
-    async categoryList(site_id) {
+    async categoryList() {
+      const site_id = this.$route.query.site_id
       const params = {
         url: 'crawler/site/category/list',
         payload: {
@@ -166,9 +180,8 @@ export default {
     }
   },
   mounted() {
-    this.categoryList('5b5424ef8b4ee5a918ac2412')
-
-
+    this.form.site_id = this.$route.query.site_id
+    this.categoryList()
 
   }
 

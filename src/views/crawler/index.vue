@@ -69,7 +69,14 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.categoryList(params.row._id)
+                    this.$router.push({
+                      path: '/crawler/category',
+                      query: {
+                        site_id: params.row._id,
+                        site_name: params.row.name
+                      }
+                    })
+
                   }
                 }
               }, '分类'),
