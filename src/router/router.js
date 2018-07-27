@@ -131,8 +131,8 @@ export const appRouter = [
                 icon: 'compose',
                 name: 'article-edit',
                 title: '编辑文章',
-                display: false,
-                component: () => import('@/views/article/article-add.vue')
+                // display: false,
+                component: () => import('@/views/article/edit.vue')
             },
             {
                 path: 'tag',

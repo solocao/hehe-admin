@@ -58,8 +58,9 @@ export default {
                     key: 'state',
                     width: 140,
                     render: (h, params) => {
+                        const row = params.row
                         return (<div>
-                            <i-button size="small" title='查看' style="margin-bottom:3px" onClick={this.openEdit}>编辑文章</i-button>
+                            <i-button size="small" title='查看' style="margin-bottom:3px" onClick={() => this.openEdit(row._id)}>编辑文章</i-button>
                             <dropdown>
                                 <i-button size="small">更多操作</i-button>
                                 <dropdown-menu slot="list">
@@ -75,11 +76,11 @@ export default {
         };
     },
     methods: {
-        openEdit() {
+        openEdit(article_id) {
             this.$router.push({
                 path: 'edit',
                 query: {
-                    article_id: '2wrqr'
+                    article_id: article_id
                 }
             })
         },

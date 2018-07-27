@@ -1,19 +1,19 @@
 <template>
   <div class="article-content-form">
     <Form ref="form" :model="form" :label-width="80" :rules="ruleValidate">
-      <FormItem prop="title" label="文章标题" :error="articleError">
-        <Input v-model="form.title" @on-blur="titleBlur" />
+      <FormItem prop="title" label="文章标题">
+        <Input v-model="form.title" />
       </FormItem>
-      <FormItem label="原文链接" :error="descriptionError">
-        <Input v-model="form.link" @on-blur="descriptionBlur" />
+      <FormItem label="原文链接">
+        <Input v-model="form.link" />
       </FormItem>
       <FormItem label="关键字" :error="keyworError">
-        <Input v-model="form.keyword" @on-blur="keywordBlur" />
+        <Input v-model="form.keyword" />
       </FormItem>
-      <FormItem label="文章描述" :error="descriptionError">
-        <Input v-model="form.description" @on-blur="descriptionBlur" />
+      <FormItem label="文章描述">
+        <Input v-model="form.description" />
       </FormItem>
-      <FormItem label="文章标签" :error="articleError">
+      <FormItem label="文章标签">
         <Tag @click.native="avtiveTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
       </FormItem>
       <FormItem label="商品图片">
@@ -117,18 +117,21 @@ export default {
     },
     // 设置form表单信息
     setForm(form) {
-      const { name, category, code, content, count, create_at, img_list, keywords, tag } = form
+      console.log('看看表单信息')
+      console.log(form)
       // 设置图片
-      this.$refs.uploadCard.setImageList(img_list)
-      // 商品名称
-      this.form.name = name;
-      // 商品编码
-      this.form.code = code
-      // 商品售卖价格
-      this.form.sale_price = sale_price;
-      // 商品介绍文本
-      this.form.content = content
-      tinymce.activeEditor.setContent(content);
+      this.$refs.uploadCard.setImageList(form.img_list)
+      // 标题
+      this.form.title = form.title;
+      // 关键词
+      this.form.keyword = form.keyword;
+      // 描述
+      this.form.description = form.description;
+      // 内容
+      this.form.content = form.content
+      // 分类 form.category
+      // 标签 form.tag
+      tinymce.activeEditor.setContent(this.form.content);
     },
 
     // 允许发布之前的权限验证
