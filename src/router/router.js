@@ -147,6 +147,13 @@ export const appRouter = [
                 name: 'draggable-list',
                 title: '文章分类',
                 component: () => import('@/views/article/category.vue')
+            },
+            {
+                path: 'category',
+                icon: 'arrow-move',
+                name: 'article-category',
+                title: '文章分类',
+                component: () => import('@/views/article/articleCategory.vue')
             }
         ]
     },

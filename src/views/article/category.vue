@@ -53,6 +53,11 @@ export default {
   data() {
     return {
       categoryMode: null,
+
+
+
+
+
       columns: [{
         type: 'selection',
         width: '50',
