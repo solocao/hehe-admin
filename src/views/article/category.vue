@@ -9,7 +9,6 @@
           分类管理
         </p>
         <tree-grid :items='data' :columns='columns' @on-row-click='rowClick' @on-selection-change='selectionClick' @on-sort-change='sortClick'></tree-grid>
-
       </Card>
 
       </Col>
@@ -36,7 +35,7 @@
         </Form>
         <Row class="margin-top-20 publish-button-con">
           <span class="publish-button" style="float:right">
-            <Button @click="categoryAdd" :loading="publishLoading" icon="ios-checkmark" style="width:90px;" type="primary">确定</Button>
+            <Button @click="categoryEdit" :loading="publishLoading" icon="ios-checkmark" style="width:90px;" type="primary">确定</Button>
           </span>
         </Row>
       </Card>
@@ -53,6 +52,7 @@ export default {
   },
   data() {
     return {
+      categoryMode: null,
       columns: [{
         type: 'selection',
         width: '50',
@@ -69,13 +69,13 @@ export default {
         title: '操作',
         type: 'action',
         actions: [{
-          type: 'primary',
+          type: 'ghost',
           text: '编辑'
         }, {
-          type: 'error',
+          type: 'ghost',
           text: '删除'
         }, {
-          type: 'success',
+          type: 'ghost',
           text: '创建子分类'
         }],
         width: '150',
@@ -141,10 +141,41 @@ export default {
         (result.msg)
       }
     },
-    rowClick(data, index, event) {
+    // 分类更新
+    async categoryUpdate() {
+      // 去除无用的字段
+      const formCopy = JSON.parse(JSON.stringify(this.categoryForm))
+      Object.keys(formCopy).map(x => {
+        if (formCopy[x] === null) {
+          delete formCopy[x]
+        }
+      })
+      const params = {
+        url: 'category/update',
+        payload: formCopy
+      }
+      const result = await this.post(params);
+      this.categoryList();
+      console.log(result)
+    },
+    // 编辑事件的总代理
+    categoryEdit() {
+      if (this.categoryMode === 'update') {
+        this.categoryUpdate()
+      }
+
+    },
+
+
+    rowClick(data, index, event, text) {
+      // alert(text)
+      if (text === '编辑') {
+        this.categoryMode = 'update'
+      }
       console.log('当前行数据:')
       console.log(data)
-      const { name, slug, description } = data
+      const { name, slug, description, _id } = data
+      this.categoryForm._id = _id;
       this.categoryForm.name = name;
       this.categoryForm.slug = slug;
       this.categoryForm.description = description;

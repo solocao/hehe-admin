@@ -68,7 +68,7 @@
             <Button @click="handleSaveDraft">保存草稿</Button>
           </span>
           <span class="publish-button">
-            <Button @click="handlePublish" :loading="publishLoading" type="primary">发布</Button>
+            <Button @click="articleUpdate" :loading="publishLoading" type="primary">保存</Button>
           </span>
         </Row>
       </Card>
@@ -160,8 +160,8 @@ export default {
         payload: {}
       }
       const result = await this.get(params)
-      if(result.code ===1 ){
-      this.$refs.form.setForm(result.data)
+      if (result.code === 1) {
+        this.$refs.form.setForm(result.data)
       }
     },
     // 获取分类列表树
@@ -252,14 +252,17 @@ export default {
     handleSaveDraft() {
 
     },
-    async handlePublish() {
+    async articleUpdate() {
       if (!this.$refs.form.validForm) {
         return false
       }
       const formData = this.$refs.form.getForm();
+      console.log('看看form')
+      console.log(formData)
+      return ''
       this.publishLoading = true;
       const params = {
-        url: '/article/add',
+        url: '/article/update',
         payload: Object.assign({}, formData, {
           category: JSON.stringify(this.$refs.categoryTree.getCheckedNodes().map(x => { return x._id }))        }),
         auth: true
@@ -268,7 +271,7 @@ export default {
       this.publishLoading = false;
       if (result.code === 1) {
         this.$Notice.success({
-          title: '发送成功',
+          title: '成功',
           desc: '文章《' + this.title + '》保存成功',
           duration: 3
         });

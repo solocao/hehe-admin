@@ -37,6 +37,8 @@ export default {
     return {
       // 文章内容
       form: {
+        // 文章id
+        _id: null,
         // 文章标题
         title: '文章标题',
         // 原文链接
@@ -121,6 +123,8 @@ export default {
       console.log(form)
       // 设置图片
       this.$refs.uploadCard.setImageList(form.img_list)
+      // id
+      this.form._id = form._id;
       // 标题
       this.form.title = form.title;
       // 关键词

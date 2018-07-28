@@ -1,43 +1,43 @@
 <template>
-  <div :style="{width:tableWidth}" class='autoTbale'>
-    <table class="table table-bordered" id='hl-tree-table'>
-      <thead>
-        <tr>
-          <th v-for="(column,index) in cloneColumns" :key="index">
-            <label v-if="column.type === 'selection'">
-              <input type="checkbox" v-model="checks" @click="handleCheckAll">
-            </label>
-            <label v-else>
-              {{ renderHeader(column, index) }}
-              <span class="ivu-table-sort" v-if="column.sortable">
-                <Icon type="arrow-up-b" :class="{on: column._sortType === 'asc'}" @click.native="handleSort(index, 'asc')" />
-                <Icon type="arrow-down-b" :class="{on: column._sortType === 'desc'}" @click.native="handleSort(index, 'desc')" />
-              </span>
-            </label>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
-          <td v-for="(column,snum) in columns" :key="column.key" :style=tdStyle(column)>
-            <label v-if="column.type === 'selection'">
-              <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
-            </label>
-            <div v-if="column.type === 'action'">
-              <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">{{action.text}}</i-button>
-            </div>
-            <label @click="toggle(index,item)" v-if="!column.type">
-              <span v-if='snum==iconRow()'>
-                <i v-html='item.spaceHtml'></i>
-                <i v-if="item.children&&item.children.length>0" class="ivu-icon" :class="{'ivu-icon-plus-circled':!item.expanded,'ivu-icon-minus-circled':item.expanded }"></i>
-                <i v-else class="ms-tree-space"></i>
-              </span> {{renderBody(item,column) }}
-            </label>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div :style="{width:tableWidth}" class='autoTbale'>
+        <table class="table table-bordered" id='hl-tree-table'>
+            <thead>
+                <tr>
+                    <th v-for="(column,index) in cloneColumns" :key="index">
+                        <label v-if="column.type === 'selection'">
+                            <input type="checkbox" v-model="checks" @click="handleCheckAll">
+                        </label>
+                        <label v-else>
+                            {{ renderHeader(column, index) }}
+                            <span class="ivu-table-sort" v-if="column.sortable">
+                                <Icon type="arrow-up-b" :class="{on: column._sortType === 'asc'}" @click.native="handleSort(index, 'asc')" />
+                                <Icon type="arrow-down-b" :class="{on: column._sortType === 'desc'}" @click.native="handleSort(index, 'desc')" />
+                            </span>
+                        </label>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in initItems" :key="item.id" v-show="show(item)" :class="{'child-tr':item.parent}">
+                    <td v-for="(column,snum) in columns" :key="column.key" :style="tdStyle(column)">
+                        <label v-if="column.type === 'selection'">
+                            <input type="checkbox" :value="item.id" v-model="checkGroup" @click="handleCheckClick(item,$event,index)">
+                        </label>
+                        <div v-if="column.type === 'action'">
+                            <i-button :type="action.type" size="small" @click="RowClick(item,$event,index,action.text)" v-for='action in (column.actions)' :key="action.text">{{action.text}}</i-button>
+                        </div>
+                        <label @click="toggle(index,item)" v-if="!column.type">
+                            <span v-if='snum==iconRow()'>
+                                <i v-html='item.spaceHtml'></i>
+                                <i v-if="item.children&&item.children.length>0" class="ivu-icon" :class="{'ivu-icon-plus-circled':!item.expanded,'ivu-icon-minus-circled':item.expanded }"></i>
+                                <i v-else class="ms-tree-space"></i>
+                            </span> {{renderBody(item,column) }}
+                        </label>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 <script>
 export default {
@@ -51,7 +51,7 @@ export default {
             }
         }
     },
-    data () {
+    data() {
         return {
             initItems: [], // 处理后数据数组
             cloneColumns: [], // 处理后的表头数据
@@ -64,12 +64,12 @@ export default {
         };
     },
     computed: {
-        tableWidth () {
+        tableWidth() {
             return this.tdsWidth > this.screenWidth && this.screenWidth > 0 ? this.screenWidth + 'px' : '100%';
         }
     },
     watch: {
-        screenWidth (val) {
+        screenWidth(val) {
             if (!this.timer) {
                 this.screenWidth = val;
                 this.timer = true;
@@ -78,7 +78,7 @@ export default {
                 }, 400);
             }
         },
-        items () {
+        items() {
             if (this.items) {
                 this.dataLength = this.Length(this.items);
                 this.initData(this.deepCopy(this.items), 1, null);
@@ -91,16 +91,16 @@ export default {
             }
         },
         columns: {
-            handler () {
+            handler() {
                 this.cloneColumns = this.makeColumns();
             },
             deep: true
         },
-        checkGroup (data) {
+        checkGroup(data) {
             this.checkAllGroupChange(data);
         }
     },
-    mounted () {
+    mounted() {
         if (this.items) {
             this.dataLength = this.Length(this.items);
             this.initData(this.deepCopy(this.items), 1, null);
@@ -124,8 +124,8 @@ export default {
         };
     },
     methods: {
-    // 有无多选框折叠位置优化
-        iconRow () {
+        // 有无多选框折叠位置优化
+        iconRow() {
             for (var i = 0, len = this.columns.length; i < len; i++) {
                 if (this.columns[i].type == 'selection') {
                     return 1;
@@ -134,7 +134,7 @@ export default {
             return 0;
         },
         // 设置td宽度,td的align
-        tdStyle (column) {
+        tdStyle(column) {
             var style = {};
             if (column.align) {
                 style['text-align'] = column.align;
@@ -145,7 +145,7 @@ export default {
             return style;
         },
         // 排序事件
-        handleSort (index, type) {
+        handleSort(index, type) {
             this.cloneColumns.forEach((col) => col._sortType = 'normal');
             if (this.cloneColumns[index]._sortType === type) {
                 this.cloneColumns[index]._sortType = 'normal';
@@ -155,12 +155,12 @@ export default {
             this.$emit('on-sort-change', this.cloneColumns[index]['key'], this.cloneColumns[index]['_sortType']);
         },
         // 点击某一行事件
-        RowClick (data, event, index, text) {
+        RowClick(data, event, index, text) {
             let result = this.makeData(data);
             this.$emit('on-row-click', result, event, index, text);
         },
         // 点击事件 返回数据处理
-        makeData (data) {
+        makeData(data) {
             const t = this.type(data);
             let o;
             if (t === 'array') {
@@ -177,7 +177,7 @@ export default {
             } else if (t === 'object') {
                 for (let i in data) {
                     if (i != 'spaceHtml' && i != 'parent' && i != 'level' && i != 'expanded' && i != 'isShow' && i !=
-            'load') {
+                        'load') {
                         o[i] = this.makeData(data[i]);
                     }
                 }
@@ -185,7 +185,7 @@ export default {
             return o;
         },
         // 处理表头数据
-        makeColumns () {
+        makeColumns() {
             let columns = this.deepCopy(this.columns);
             this.tdsWidth = 0;
             columns.forEach((column, index) => {
@@ -194,10 +194,12 @@ export default {
                 column._sortType = 'normal';
                 this.tdsWidth += column.width ? parseFloat(column.width) : 0;
             });
+            console.log('看看colums');
+            console.log(columns);
             return columns;
         },
         // 数据处理 增加自定义属性监听
-        initData (items, level, parent) {
+        initData(items, level, parent) {
             this.initItems = [];
             let spaceHtml = '';
             for (var i = 1; i < level; i++) {
@@ -234,10 +236,10 @@ export default {
             });
         },
         //  隐藏显示
-        show (item) {
+        show(item) {
             return ((item.level == 1) || (item.parent && item.parent.expanded && item.isShow));
         },
-        toggle (index, item) {
+        toggle(index, item) {
             let level = item.level + 1;
             let spaceHtml = '';
             for (var i = 1; i < level; i++) {
@@ -266,7 +268,7 @@ export default {
                 }
             }
         },
-        open (index, item) {
+        open(index, item) {
             if (item.children) {
                 item.children.forEach((child, childIndex) => {
                     child.isShow = true;
@@ -276,7 +278,7 @@ export default {
                 });
             }
         },
-        close (index, item) {
+        close(index, item) {
             if (item.children) {
                 item.children.forEach((child, childIndex) => {
                     child.isShow = false;
@@ -288,7 +290,7 @@ export default {
             }
         },
         // 点击check勾选框,判断是否有children节点 如果有就一并勾选
-        handleCheckClick (data, event, index) {
+        handleCheckClick(data, event, index) {
             data.isChecked = !data.isChecked;
             var arr = data.children;
             if (arr) {
@@ -312,7 +314,7 @@ export default {
             }
         },
         // checkbox 全选 选择事件
-        handleCheckAll () {
+        handleCheckAll() {
             this.checks = !this.checks;
             if (this.checks) {
                 this.checkGroup = this.getArray(this.checkGroup.concat(this.All(this.items)));
@@ -322,7 +324,7 @@ export default {
             // this.$emit('on-selection-change', this.checkGroup)
         },
         // 数组去重
-        getArray (a) {
+        getArray(a) {
             var hash = {},
                 len = a.length,
                 result = [];
@@ -334,7 +336,7 @@ export default {
             }
             return result;
         },
-        checkAllGroupChange (data) {
+        checkAllGroupChange(data) {
             if (this.dataLength > 0 && data.length === this.dataLength) {
                 this.checks = true;
             } else {
@@ -342,7 +344,7 @@ export default {
             }
             this.$emit('on-selection-change', this.checkGroup);
         },
-        All (data) {
+        All(data) {
             let arr = [];
             data.forEach((item) => {
                 arr.push(item.id);
@@ -353,7 +355,7 @@ export default {
             return arr;
         },
         // 返回树形数据长度
-        Length (data) {
+        Length(data) {
             let length = data.length;
             data.forEach((child) => {
                 if (child.children) {
@@ -363,7 +365,7 @@ export default {
             return length;
         },
         // 返回表头
-        renderHeader (column, $index) {
+        renderHeader(column, $index) {
             if ('renderHeader' in this.columns[$index]) {
                 return this.columns[$index].renderHeader(column, $index);
             } else {
@@ -371,11 +373,11 @@ export default {
             }
         },
         // 返回内容
-        renderBody (row, column, index) {
+        renderBody(row, column, index) {
             return row[column.key];
         },
         // 默认选中
-        renderCheck (data) {
+        renderCheck(data) {
             let arr = [];
             data.forEach((item) => {
                 if (item._checked) {
@@ -388,7 +390,7 @@ export default {
             return arr;
         },
         // 深度拷贝函数
-        deepCopy (data) {
+        deepCopy(data) {
             var t = this.type(data),
                 o, i, ni;
             if (t === 'array') {
@@ -410,7 +412,7 @@ export default {
                 return o;
             }
         },
-        type (obj) {
+        type(obj) {
             var toString = Object.prototype.toString;
             var map = {
                 '[object Boolean]': 'boolean',
@@ -427,7 +429,7 @@ export default {
             return map[toString.call(obj)];
         }
     },
-    beforeDestroy () {
+    beforeDestroy() {
         window.onresize = null;
     }
 };
