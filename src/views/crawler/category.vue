@@ -26,7 +26,16 @@
           <Input v-model="form.url"></Input>
         </FormItem>
         <FormItem label="系统内分类">
-          <Input v-model="form.target_category"></Input>
+          <Dropdown placement="bottom-start">
+            <a href="javascript:void(0)">
+              {{categoryName}}
+              <Icon type="arrow-down-b"></Icon>
+            </a>
+            <DropdownMenu slot="list" style="width:300px;padding-left:10px">
+              <Tree :data="categoryTreeData"></Tree>
+            </DropdownMenu>
+          </Dropdown>
+
         </FormItem>
         <FormItem label="爬列表规则">
           <Input v-model="form.list_rule"></Input>
@@ -42,8 +51,10 @@
 export default {
   data() {
     return {
+      categoryTreeData: [],
       categoryModal: false,
       categoryMode: null,
+      categoryName: '暂无分类',
       form: {
         // 站点id
         site_id: null,
@@ -58,8 +69,24 @@ export default {
       },
       categoryColumns: [
         {
-          title: '分类',
-          key: 'origin_category'
+          title: '原站分类',
+          key: 'origin_category',
+          render: (h, params) => {
+            const row = params.row
+            return (<a target="_blank" href={row.url}>{row.origin_category}</a>)
+          }
+        },
+        {
+          title: '系统分类',
+          key: 'target_category',
+          render: (h, params) => {
+            const row = params.row
+            let name = '';
+            if (row.target_category) {
+              name = row.target_category.name
+            }
+            return (<span>{name}</span>)
+          }
         },
         {
           title: '日期',
@@ -94,7 +121,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    // this.show(params.index)
                   }
                 }
               }, '详情'),
@@ -106,7 +133,6 @@ export default {
                 on: {
                   click: () => {
                     this.categoryUpdate(params.row)
-
                   }
                 }
               }, '编辑')
@@ -120,16 +146,50 @@ export default {
     };
   },
   methods: {
+    cancel() { },
+    treeChange(data) {
+      console.log(data)
+      const { name, _id } = data;
+      this.categoryName = name;
+      this.form.target_category = _id;
+    },
     categoryAdd() {
       this.categoryModal = true;
       this.categoryMode = 'add';
     },
+    // 获取分类列表树
+    async categoryTreeList() {
+      const params = {
+        url: 'category/list',
+        payload: {}
+      }
+      const result = await this.post(params)
+      const data = result.data
+      const self = this
+      function nodeTree(tree) {
+        tree.forEach(e => {
+          e.title = e.name;
+          e.expand = true;
+          e.render = (h, { root, node, data }) => {
+            return (<span class="tree-span" onClick={() => { self.treeChange(data) }}>{e.name}</span>)
+          }
+          if (e.children === undefined) {
+            return
+          } else {
+            nodeTree(e.children)
+          }
+        });
+      }
+      nodeTree(data)
+      this.categoryTreeData = data
+    },
     categoryUpdate(row) {
       const { origin_category, origin_id, target_category, _id, crule, list_rule, detail_rule, url } = row
+      this.categoryName = target_category.name;
       this.form.url = url;
       this.form.category_id = _id;
       this.form.origin_category = origin_category;
-      this.form.target_category = target_category;
+      this.form.target_category = target_category._id;
       this.form.list_rule = list_rule;
       this.form.detail_rule = detail_rule;
       this.categoryModal = true;
@@ -182,12 +242,31 @@ export default {
   mounted() {
     this.form.site_id = this.$route.query.site_id
     this.categoryList()
-
+    this.categoryTreeList()
   }
-
 };
 </script>
 <style lang="stylus">
+.ivu-tree ul li {
+  margin: -4px 0 !important;
+}
+
+.tree-span {
+  width: 100%;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 2px;
+
+  &:hover {
+    background: #EAF4FE;
+  }
+}
+
+.ivu-dropdown-rel {
+  a {
+    color: #495060 !important;
+  }
+}
 </style>
 
 
