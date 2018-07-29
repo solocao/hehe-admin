@@ -13,6 +13,7 @@
         </div>
       </Card>
       </Col>
+
     </Row>
 
   </div>
@@ -39,7 +40,11 @@ export default {
         },
         {
           title: '名称',
-          key: 'name'
+          key: 'name',
+          render: (h, params) => {
+            const row = params.row
+            return (<a href="">{row.name}</a>)
+          }
         },
         {
           title: '描述',

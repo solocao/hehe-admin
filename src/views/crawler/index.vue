@@ -51,7 +51,11 @@ export default {
       siteColumns: [
         {
           title: '站点',
-          key: 'name'
+          key: 'name',
+          render: (h, params) => {
+            const row = params.row
+            return (<a target="_blank" href={row.site}>{row.name}</a>)
+          }
         },
         {
           title: '操作',
@@ -127,7 +131,6 @@ export default {
     siteModeUpdate() {
       this.siteModal = true;
       this.siteMode = 'update'
-
     },
     async ok() {
       if (this.siteMode === 'add') {
