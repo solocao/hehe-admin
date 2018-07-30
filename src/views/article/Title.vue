@@ -1,6 +1,6 @@
 <template>
     <div class="article-title">
-        <img src="https://static.zhaidianshe.com/userContent/image/55153.jpeg-webp" alt="">
+        <img :src="data.img_list[0].url" alt="">
         <div class="a-container">
             <div class="title">
                 {{data.title}}</div>
@@ -10,9 +10,7 @@
             <div>
                 评论 喜欢
             </div>
-
         </div>
-
     </div>
 </template>
 <script>

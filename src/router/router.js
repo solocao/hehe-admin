@@ -199,6 +199,13 @@ export const appRouter = [
                 title: '规则详情',
                 component: () => import('@/views/crawler/add.vue')
             },
+            {
+                path: 'suck',
+                icon: 'compose',
+                name: 'crawler-suck',
+                title: '站点爬取',
+                component: () => import('@/views/crawler/siteSuck.vue')
+            },
         ]
     },
     {

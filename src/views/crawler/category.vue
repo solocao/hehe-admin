@@ -77,6 +77,10 @@ export default {
           }
         },
         {
+          title: '分类ID',
+          key: '_id'
+        },
+        {
           title: '系统分类',
           key: 'target_category',
           render: (h, params) => {
@@ -156,6 +160,14 @@ export default {
     categoryAdd() {
       this.categoryModal = true;
       this.categoryMode = 'add';
+      // 站点分类名称
+      this.form.origin_category = null;
+      // 此站点的网址
+      this.form.url = null;
+      // 本系统目标分类
+      this.form.target_category = null;
+      this.form.list_rule = null;
+      this.form.detail_rule = null;
     },
     // 获取分类列表树
     async categoryTreeList() {
@@ -185,11 +197,17 @@ export default {
     },
     categoryUpdate(row) {
       const { origin_category, origin_id, target_category, _id, crule, list_rule, detail_rule, url } = row
-      this.categoryName = target_category.name;
+      console.log(row)
+      if (target_category) {
+        this.categoryName = target_category.name;
+        this.form.target_category = target_category._id;
+      } else {
+        this.categoryName = '暂无分类';
+        this.form.target_category = null;
+      }
       this.form.url = url;
       this.form.category_id = _id;
       this.form.origin_category = origin_category;
-      this.form.target_category = target_category._id;
       this.form.list_rule = list_rule;
       this.form.detail_rule = detail_rule;
       this.categoryModal = true;
@@ -197,18 +215,20 @@ export default {
     },
     async ok() {
       if (this.categoryMode === 'add') {
-        const formCopy = this.form;
+        const formCopy = JSON.parse(JSON.stringify(this.form));
         Object.keys(formCopy).map(x => {
           if (formCopy[x] === null)
             delete formCopy[x]
         })
+        delete formCopy.category_id
+        console.log(formCopy)
         const params = {
           url: 'crawler/site/category/add',
           payload: formCopy,
           auth: true
         }
         const result = await this.post(params)
-        alert(result)
+        this.categoryList()
       }
       if (this.categoryMode === 'update') {
         const formCopy = JSON.parse(JSON.stringify(this.form))
@@ -246,7 +266,7 @@ export default {
   }
 };
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .ivu-tree ul li {
   margin: -4px 0 !important;
 }
