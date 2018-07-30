@@ -8,7 +8,7 @@
                 <Button size='small'>爬虫</Button>
             </ButtonGroup>
             <ButtonGroup class="btn-item">
-                <Button size='small'>刷新</Button>
+                <Button size='small' @click="articleList">刷新</Button>
                 <Button size='small' type="primary">清空搜索条件</Button>
                 <Button size='small'>全部</Button>
                 <Button size='small'>批量操作</Button>
@@ -18,8 +18,10 @@
                 <Button size='small'>搜索</Button>
             </div>
         </div>
-
         <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
+        <div class="article-page">
+            <Page :total="paginate.total" size="small" @on-change="pageChange" @on-page-size-change="pageSizeChange" show-elevator show-sizer></Page>
+        </div>
 
     </div>
 </template>
@@ -30,6 +32,12 @@ import Title from './Title.vue'
 export default {
     data() {
         return {
+            paginate: {
+                page: 1,
+                pages: 1,
+                size: 10,
+                total: 0
+            },
             tableData1: this.mockTableData1(),
             imageName: '',
             tableColumns1: [
@@ -76,6 +84,16 @@ export default {
         };
     },
     methods: {
+        // 分页页面数
+        pageChange(page) {
+            this.paginate.page = page;
+            this.articleList()
+        },
+        // 每页现实内容数目
+        pageSizeChange(pageSize) {
+            this.paginate.size = pageSize;
+            this.articleList()
+        },
         openEdit(article_id) {
             this.$router.push({
                 path: 'edit',
@@ -131,13 +149,17 @@ export default {
         async articleList() {
             const params = {
                 url: 'article/list',
-                payload: {}
+                payload: {
+                    page: this.paginate.page,
+                    size: this.paginate.size
+                }
             }
             const result = await this.post(params)
             console.log('看看结果')
             console.log(result)
             console.log(result.data)
             this.tableData1 = result.data
+            this.paginate = result.paginate
 
         }
 
@@ -170,5 +192,12 @@ export default {
       right: 4px;
     }
   }
+}
+
+.article-page {
+  padding: 6px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
