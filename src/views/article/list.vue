@@ -66,14 +66,23 @@ export default {
                     key: 'state',
                     width: 140,
                     render: (h, params) => {
-                        const row = params.row
+                        const row = params.row;
+                        const self = this;
                         return (<div>
                             <i-button size="small" title='查看' style="margin-bottom:3px" onClick={() => this.openEdit(row._id)}>编辑文章</i-button>
                             <dropdown>
                                 <i-button size="small">更多操作</i-button>
                                 <dropdown-menu slot="list">
-                                    <dropdown-item><icon type="ios-copy"></icon>预x w览文章</dropdown-item>
-                                    <dropdown-item><icon type="ios-download"></icon>删除文章</dropdown-item>
+                                    <dropdown-item>
+                                        <div onClick={() => self.articleDelete(row._id)} >
+                                            <icon type="ios-copy"></icon>预览文章
+                                        </div>
+                                    </dropdown-item>
+                                    <dropdown-item>
+                                        <div onClick={() => self.articleDelete(row._id)} >
+                                            <icon type="ios-copy"></icon>删除文章
+                                        </div>
+                                    </dropdown-item>
                                     <dropdown-item><icon type="trash-b"></icon>修改标签</dropdown-item>
                                 </dropdown-menu>
                             </dropdown>
@@ -93,6 +102,23 @@ export default {
         pageSizeChange(pageSize) {
             this.paginate.size = pageSize;
             this.articleList()
+        },
+        // 删除文章
+        async  articleDelete(_id) {
+            const params = {
+                url: 'article/item/delete',
+                payload: {
+                    _id: _id
+                },
+                auth: true
+            }
+            const result = await this.post(params);
+            if (result.code === 1) {
+                this.articleList()
+
+            }
+
+
         },
         openEdit(article_id) {
             this.$router.push({
