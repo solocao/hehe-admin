@@ -257,9 +257,6 @@ export default {
         return false
       }
       const formData = this.$refs.form.getForm();
-      console.log('看看form')
-      console.log(formData)
-      return ''
       this.publishLoading = true;
       const params = {
         url: '/article/update',

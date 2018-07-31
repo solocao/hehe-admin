@@ -29,6 +29,7 @@
 import articleTitle from './articleTitle.vue'
 import Title from './meta/Title.vue'
 import Category from './meta/Category.vue'
+import Tag from './meta/Tag.vue'
 export default {
     data() {
         return {
@@ -51,12 +52,19 @@ export default {
                     }
                 },
                 {
-                    title: '属性',
-                    key: 'create_at',
-                    width: 100,
+                    title: '标签',
+                    key: 'tag',
                     render: (h, params) => {
-                        const row = params.row;
-                        return (<Category data={row} />)
+                        const tag = params.row.tag;
+                        return (<Tag data={tag} />)
+                    }
+                },
+                {
+                    title: '分类',
+                    key: 'category',
+                    render: (h, params) => {
+                        const category = params.row.category;
+                        return (<Category data={category} />)
                     }
                 },
                 {
