@@ -3,23 +3,28 @@
         <img :src="data.img_list[0].url" alt="">
         <div class="a-container">
             <div class="title">
-                {{data.title}}</div>
-            <div>
-                分类 标签
+                {{data.title}}
             </div>
             <div>
-                评论 喜欢
+                {{timeS(data.create_at)}}
             </div>
         </div>
     </div>
 </template>
 <script>
+import util from '../../../libs/util.js';
 export default {
     props: {
         data: {
             default: null
         }
+    },
+    methods: {
+        timeS (create_at) {
+            return util.timeS(create_at);
+        }
     }
+
 };
 </script>
 <style lang="stylus" scoped>
@@ -38,6 +43,8 @@ export default {
     .a-container {
         width: 400px -78px;
         padding-left: 6px;
+        display: flex;
+        flex-direction: column;
 
         .title {
             // font-weight: bold;

@@ -141,13 +141,13 @@ export const appRouter = [
                 title: '文章标签',
                 component: () => import('@/views/article/tag.vue')
             },
-            {
-                path: 'draggable-list',
-                icon: 'arrow-move',
-                name: 'draggable-list',
-                title: '文章分类',
-                component: () => import('@/views/article/category.vue')
-            },
+            // {
+            //     path: 'draggable-list',
+            //     icon: 'arrow-move',
+            //     name: 'draggable-list',
+            //     title: '文章分类',
+            //     component: () => import('@/views/article/category.vue')
+            // },
             {
                 path: 'category',
                 icon: 'arrow-move',

@@ -27,8 +27,8 @@
 </template>
 <script>
 import articleTitle from './articleTitle.vue'
-import util from '../../libs/util.js'
-import Title from './Title.vue'
+import Title from './meta/Title.vue'
+import Category from './meta/Category.vue'
 export default {
     data() {
         return {
@@ -51,10 +51,12 @@ export default {
                     }
                 },
                 {
-                    title: '日期',
+                    title: '属性',
                     key: 'create_at',
+                    width: 100,
                     render: (h, params) => {
-                        return h('span', util.timeS(params.row.create_at))
+                        const row = params.row;
+                        return (<Category data={row} />)
                     }
                 },
                 {
