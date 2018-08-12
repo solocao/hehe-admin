@@ -20,8 +20,8 @@ export default {
         }
     },
     methods: {
-        timeS (create_at) {
-            return util.timeS(create_at);
+        timeS (createAt) {
+            return util.timeS(createAt);
         }
     }
 

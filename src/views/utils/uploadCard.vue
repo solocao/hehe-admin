@@ -225,9 +225,13 @@ export default {
     // 获取需要向后台发送的图片数据
     getImageList() {
       const selectImages = this.selected;
+      // 封面
       const cover2 = selectImages.filter(x => x.cover === 2).map(x => { return { name: x.name, url: x.url, cover: x.cover } })
+      // 配图
       const cover1 = selectImages.filter(x => x.cover === 1).map(x => { return { name: x.name, url: x.url, cover: x.cover } })
-      return JSON.stringify(cover2.concat(cover1))
+      // 素材
+      const cover0 = selectImages.filter(x => x.cover === undefined).map(x => { return { name: x.name, url: x.url, cover: 0 } })
+      return JSON.stringify(cover2.concat(cover1).concat(cover0));
     },
     async uploadImgByUrl() {
       const params = {

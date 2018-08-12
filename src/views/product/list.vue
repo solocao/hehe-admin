@@ -20,6 +20,7 @@
   </div>
 </template>
 <script>
+import util from '../../libs/util.js';
 export default {
   data() {
     return {
@@ -32,10 +33,8 @@ export default {
           width: 200,
           render: (h, params) => {
             const row = params.row;
-            console.log(row.title)
             const text = row.name
             const img_url = row.img_list.length > 0 ? row.img_list[0].url : 'addsa';
-            console.log(img_url)
             // h('div', {
             //   style: {
             //     textAlign: 'center',
@@ -83,7 +82,14 @@ export default {
         },
         {
           title: '日期',
-          key: 'create_at'
+          key: 'create_at',
+          // render: (h, params) => {
+          //   const row = params.row;
+          //   const create_at = row.create_at;
+          //   console.log('看看看看');
+          //   console.log(create_at)
+          //   return ({ create_at })
+          // }
         },
         {
           title: '状态',
@@ -168,6 +174,9 @@ export default {
     };
   },
   methods: {
+    timeS(createAt) {
+      return util.timeS(createAt);
+    },
     mockTableData1() {
       let data = [];
       for (let i = 0; i < 10; i++) {
@@ -220,7 +229,6 @@ export default {
       }
       const result = await this.post(params)
       console.log('看看结果')
-      console.log(result)
       console.log(result.data)
       this.tableData1 = result.data
 
