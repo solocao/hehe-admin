@@ -186,9 +186,9 @@ export const appRouter = [
                 component: () => import('@/views/crawler/record.vue')
             },
             {
-                path: 'upload1',
+                path: 'rule',
                 icon: 'compose',
-                name: 'crawler-item1',
+                name: 'crawler-rule',
                 title: '规则列表',
                 component: () => import('@/views/crawler/rule.vue')
             },

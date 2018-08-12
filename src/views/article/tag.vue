@@ -56,6 +56,10 @@ export default {
           key: 'name'
         },
         {
+          title: '标签ID',
+          key: '_id'
+        },
+        {
           title: '别名',
           key: 'slug'
         },

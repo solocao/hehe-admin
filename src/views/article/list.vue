@@ -93,7 +93,16 @@ export default {
                                             <icon type="ios-copy"></icon>删除文章
                                         </div>
                                     </dropdown-item>
-                                    <dropdown-item><icon type="trash-b"></icon>修改标签</dropdown-item>
+                                    <dropdown-item>
+                                        <div onClick={() => self.articleDelete(row._id)} >
+                                            <icon type="ios-copy"></icon>修改标签
+                                        </div>
+                                    </dropdown-item>
+                                    <dropdown-item>
+                                        <div onClick={() => self.articleDelete(row._id)} >
+                                            <icon type="ios-copy"></icon>修改分类
+                                        </div>
+                                    </dropdown-item>
                                 </dropdown-menu>
                             </dropdown>
                         </div >)

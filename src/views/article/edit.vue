@@ -269,7 +269,7 @@ export default {
       if (result.code === 1) {
         this.$Notice.success({
           title: '成功',
-          desc: '文章《' + this.title + '》保存成功',
+          desc: '文章《' + result.data.title + '》保存成功',
           duration: 3
         });
       } else {
@@ -293,88 +293,8 @@ export default {
   },
   mounted() {
     this.article_id = this.$route.query.article_id
-    this.getArticle()
-    this.categoryList()
-    this.classificationList = [
-      {
-        title: 'Vue实例',
-        expand: true,
-        children: [
-          {
-            title: '数据与方法',
-            expand: true
-          },
-          {
-            title: '生命周期',
-            expand: true
-          }
-        ]
-      },
-      {
-        title: 'Class与Style绑定',
-        expand: true,
-        children: [
-          {
-            title: '绑定HTML class',
-            expand: true,
-            children: [
-              {
-                title: '对象语法',
-                expand: true
-              },
-              {
-                title: '数组语法',
-                expand: true
-              },
-              {
-                title: '用在组件上',
-                expand: true
-              }
-            ]
-          },
-          {
-            title: '生命周期',
-            expand: true
-          }
-        ]
-      },
-      {
-        title: '模板语法',
-        expand: true,
-        children: [
-          {
-            title: '插值',
-            expand: true
-          },
-          {
-            title: '指令',
-            expand: true
-          },
-          {
-            title: '缩写',
-            expand: true
-          }
-        ]
-      }
-    ];
-    this.offenUsedClass = [
-      {
-        title: 'vue实例'
-      },
-      {
-        title: '生命周期'
-      },
-      {
-        title: '模板语法'
-      },
-      {
-        title: '插值'
-      },
-      {
-        title: '缩写'
-      }
-    ];
-
+    this.getArticle();
+    this.categoryList();
   },
 
 };

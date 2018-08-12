@@ -13,9 +13,7 @@
         </div>
       </Card>
       </Col>
-
     </Row>
-
   </div>
 </template>
 <script>

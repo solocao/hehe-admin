@@ -34,19 +34,26 @@ export default {
             const row = params.row;
             console.log(row.title)
             const text = row.name
-            const img_url = row.img_list[0]
-            return h('div', {
-              style: {
-                textAlign: 'center',
-                padding: '0px',
-                height: '100px',
-                width: '160px',
-                border: '1px solid #80808040',
-                borderRadius: '4px',
-                background: 'url(' + img_url + ')',
-                backgroundSize: 'cover'
-              }
-            }, text);
+            const img_url = row.img_list.length > 0 ? row.img_list[0].url : 'addsa';
+            console.log(img_url)
+            // h('div', {
+            //   style: {
+            //     textAlign: 'center',
+            //     padding: '0px',
+            //     height: '100px',
+            //     width: '160px',
+            //     border: '1px solid #80808040',
+            //     borderRadius: '4px',
+            //     background: 'url(' + img_url + ')',
+            //     backgroundSize: 'cover'
+            //   }
+            // }, text);
+            return (<div class="h-product-title">
+              <span>
+                {text}
+              </span>
+              <img src={img_url} />
+            </div>)
           }
         },
         {
@@ -225,4 +232,29 @@ export default {
   }
 };
 </script>
+<style lang="stylus">
+.h-product-title {
+  text-align: center;
+  padding: 0px;
+  height: 100px;
+  width: 160px;
+  border: 1px solid #80808040;
+  border-radius: 2px;
+  position: relative;
+
+  span {
+    position: absolute;
+    top: 0px;
+    background: #1d1c1c63;
+    padding: 2px 5px;
+    color: white;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+</style>
+
 

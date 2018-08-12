@@ -7,7 +7,7 @@
       <FormItem label="原文链接">
         <Input v-model="form.link" />
       </FormItem>
-      <FormItem label="关键字" :error="keyworError">
+      <FormItem label="关键字">
         <Input v-model="form.keyword" />
       </FormItem>
       <FormItem label="文章描述">
@@ -135,7 +135,9 @@ export default {
       this.form.content = form.content
       // 分类 form.category
       // 标签 form.tag
-      tinymce.activeEditor.setContent(this.form.content);
+      setTimeout(() => {
+        tinymce.activeEditor.setContent(this.form.content);
+      }, 300);
     },
 
     // 允许发布之前的权限验证
