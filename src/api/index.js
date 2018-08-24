@@ -17,6 +17,7 @@ export const get = (params) => {
     }
     // 需要验证
     if (auth) {
+        console.log(store);
         config = Object.assign({}, config, {
             headers: {
                 authorization: store.state.user.auth

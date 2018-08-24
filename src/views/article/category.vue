@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <Row>
       <Col span="16">
       <Card>
@@ -53,11 +52,6 @@ export default {
   data() {
     return {
       categoryMode: null,
-
-
-
-
-
       columns: [{
         type: 'selection',
         width: '50',

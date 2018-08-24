@@ -261,9 +261,9 @@ export const appRouter = [
                 component: () => import('@/views/product/tag.vue')
             },
             {
-                path: 'add',
+                path: 'brand/add',
                 icon: 'pound',
-                name: 'product-category',
+                name: 'brand-add',
                 title: '品牌管理',
                 component: () => import('@/views/product/brand.vue')
             },
