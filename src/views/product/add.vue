@@ -131,7 +131,7 @@ export default {
       }],
       content: '<h2>I am Example</h2>',
 
-      brandValue: ["5b3f3f193938383b7b8a9ce9"],
+      brandValue: "5b3f3f193938383b7b8a9ce9",
       editorOption: {
         // some quill options
       },
@@ -154,7 +154,7 @@ export default {
         // 标签
         tag: [],
         // 品牌
-        brand: [],
+        brand: null,
         // 关键字
         keyword: [],
         // 文章状态

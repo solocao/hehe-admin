@@ -15,11 +15,14 @@
       <div class="add-item" @click="modalCard=true">
         <Icon type="plus-round" :size="40"></Icon>
       </div>
-
     </div>
-
-    <Modal v-model="modalCard" title="添加图片" width="850">
-
+    <Modal v-model="modalCard" width="850">
+      <p slot="header" style="height:26px;display:flex;align-items:center">
+        <span style="float:left">图片列表</span>
+        <span style="marginLeft:20px;width:700px;float:right;fontSize:12px;fontWeight:normal">
+          <Page :total="40" size="small" show-elevator show-total></Page>
+        </span>
+      </p>
       <Input v-if="false" size="small" v-model="search" icon="ios-search-strong" placeholder="Enter something..." style="width: 200px"></Input>
 
       <Row>
@@ -52,6 +55,9 @@
             <div class="img-meta">
               400*34
             </div>
+            <div class="img-update">
+              {{timeS(item.lastModified)}}
+            </div>
             <div class="img-title">
               {{item.name}}
             </div>
@@ -60,7 +66,7 @@
             </div>
           </li>
         </ul>
-        <Page :total="100"></Page>
+
       </Row>
     </Modal>
 
@@ -68,6 +74,7 @@
 </template>
 <script>
 import config from '../../config'
+import dayjs from 'dayjs'
 export default {
   data() {
     return {
@@ -235,16 +242,23 @@ export default {
     },
     async uploadImgByUrl() {
       const params = {
-        url: 'image/url',
+        url: 'media/image/url',
         payload: {
           url: this.imgUrl
         },
         auth: true
       }
       const result = await this.post(params)
+      if (result.code === 1) {
+        this.imgUrl = '';
+        this.imgList();
+      }
       console.log('看看结果')
       console.log(result)
+    },
 
+    timeS(time) {
+      return dayjs(time).format('YYYY-MM-DD HH:mm:ss')
     },
 
     uploadSuccess(evnet, file) {
@@ -343,10 +357,13 @@ export default {
       position: relative;
       margin-right: 6px;
       margin-bottom: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       img {
-        width: 100%;
-        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
       }
 
       .choose-title {
@@ -438,10 +455,13 @@ export default {
     .img-show {
       width: 105px;
       height: 105px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       img {
-        width: 100%;
-        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
       }
     }
 
@@ -455,6 +475,21 @@ export default {
       background: #0000006e;
       color: white;
       font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .img-update {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background: #0000006e;
+      color: white;
+      font-size: 12px;
+      transform: scale(0.8);
+      transform-origin: 0 0 0;
+      width: 125%;
       display: flex;
       align-items: center;
       justify-content: center;

@@ -20,7 +20,9 @@
                 <Tag @click.native="activeTag(t)" type="dot" :color="t.active?'blue':'grey'" v-for="t in tags" :key="t.name">{{t.name}}</Tag>
             </FormItem>
             <FormItem label="品牌">
-                <Cascader :data="brandData" v-model="brandValue" style="width:300px"></Cascader>
+                <Select v-model="form.brand" style="width:200px">
+                    <Option v-for="item in brandData" :value="item._id" :key="item.name">{{ item.name }}</Option>
+                </Select>
             </FormItem>
             <FormItem label="商品图片">
                 <upload-card ref="uploadCard"></upload-card>
@@ -61,7 +63,7 @@ export default {
                 // 标签
                 tag: [],
                 // 品牌
-                brand: [],
+                brand: null,
                 // 关键字
                 keyword: [],
                 // 文章状态
@@ -139,20 +141,11 @@ export default {
                 payload: {}
             }
             const result = await this.post(params)
-            const data = result.data
-            function nodeTree(tree) {
-                tree.forEach(e => {
-                    e.value = e._id
-                    e.label = e.name
-                    if (e.children === undefined) {
-                        return
-                    } else {
-                        nodeTree(e.children)
-                    }
-                });
+            if (result.code === 1) {
+                this.brandData = result.data
             }
-            nodeTree(data)
-            this.brandData = data
+            console.log('看看品牌')
+            console.log(result)
         },
         // 获取商品tag
         async tagList() {

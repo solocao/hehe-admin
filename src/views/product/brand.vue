@@ -93,21 +93,19 @@ export default {
         {
           title: '名称',
           key: 'name',
+          width: 100
+        },
+        {
+          title: '品牌logo',
+          key: 'name',
           width: 200,
           render: (h, params) => {
             const row = params.row;
             const text = row.name
             const img_url = row.img_url
-            return h('div', {
-              style: {
-                textAlign: 'center',
-                padding: '0px',
-                height: '100px',
-                width: '160px',
-                background: 'url(' + img_url + ')',
-                backgroundSize: 'cover'
-              }
-            }, text);
+            return (<div class="h-brand-title">
+              <img src={img_url} />
+            </div>)
           }
         },
         {
@@ -260,6 +258,21 @@ export default {
 .a-mtp {
   margin-top: 2px;
   margin-bottom: 2px;
+}
+
+.h-brand-title {
+  padding: 0px;
+  height: 60px;
+  width: 120px;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    max-width: 100%;
+    max-height: 100%;
+  }
 }
 </style>
 

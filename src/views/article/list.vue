@@ -18,10 +18,18 @@
                 <Button size='small'>搜索</Button>
             </div>
         </div>
-        <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
-        <div class="article-page">
-            <Page :total="paginate.total" size="small" @on-change="pageChange" @on-page-size-change="pageSizeChange" show-elevator show-sizer></Page>
-        </div>
+
+        <Card>
+            <p slot="title">
+                <Icon type="paper-airplane"></Icon>
+                分类管理
+            </p>
+            <Table :data="tableData1" :columns="tableColumns1" stripe ref="table2image"></Table>
+            <div class="article-page">
+                <Page :total="paginate.total" size="small" @on-change="pageChange" @on-page-size-change="pageSizeChange" show-elevator show-sizer></Page>
+            </div>
+
+        </Card>
 
     </div>
 </template>
