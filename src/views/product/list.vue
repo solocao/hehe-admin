@@ -1,5 +1,5 @@
 <template>
-  <div style="background:white">
+  <div class="product-list" style="background:white">
     <div style="marginBottom:4px;marginTop:4px">
       <ButtonGroup>
         <Button size='small'>全部</Button>
@@ -77,6 +77,30 @@ export default {
           }
         },
         {
+          title: '价格',
+          key: 'price',
+          width: 90,
+          render: (h, params) => {
+            const row = params.row;
+            const { official_price, sale_price } = row;
+            return (<div class="cell-price">
+              <div class="c-title">
+                <span>原价</span>
+              </div>
+              <div class="c-price">
+                {official_price}
+              </div>
+              <div class="c-title">
+                <span>现价</span>
+              </div>
+              <div class="c-price">
+                {sale_price}
+              </div>
+            </div>)
+          }
+
+        },
+        {
           title: '标签',
           key: 'tag',
           render: (h, params) => {
@@ -100,9 +124,11 @@ export default {
           title: '日期',
           key: 'create_at',
           render: (h, params) => {
-            return h('span',
-              dayjs(params.row.create_at).format('YYYY-MM-DD HH:mm:ss')
-            );
+            const date = dayjs(params.row.create_at).format('YYYY-MM-DD HH:mm:ss').split(' ')
+            return (<div>
+              <div>{date[0]}</div>
+              <div>{date[1]}</div>
+            </div>)
           }
         },
         {
@@ -312,6 +338,19 @@ export default {
   img {
     max-width: 100%;
     max-height: 100%;
+  }
+}
+
+.product-list {
+  .cell-price {
+    .c-title {
+      color: grey;
+      font-size: 12px;
+    }
+
+    .c-price {
+      font-weight: bold;
+    }
   }
 }
 </style>
